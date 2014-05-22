@@ -11,8 +11,10 @@ public:
 	BoxHandler(int size);
 	~BoxHandler();
 
-	// Get size of handler
+	// Get total count of elements
 	int getSize();
+	// Get total number that can be stored 
+	int getCapacity();
 
 	// Get boxes
 	Box** getBoxes();
