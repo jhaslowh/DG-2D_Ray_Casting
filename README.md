@@ -10,7 +10,7 @@ OpenGL 3.0 or greater is required to run.
 To compile on windows, run the project with Visual Studio 2010 or greater and build it.  
 
 **Linux**  
-To compile on linux, navigate to the src folding and run make. The build will be in the Build folder and will be named "UFOAttack".  
+To compile on linux, navigate to the src folding and run make. The build will be in the build folder and will be named "2DLight".  
 If you get errors while building on linux, you may need the opengl header files (See below).  
 
 ### Libraries
