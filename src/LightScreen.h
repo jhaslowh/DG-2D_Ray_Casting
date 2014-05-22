@@ -1,8 +1,10 @@
 #pragma once
 #include <math.h>
 #include <stdlib.h>
+#include <string>
 #include "UIScreen.h"
 #include "UIButton.h"
+#include "UILabel.h"
 #include "BoxHandler.h"
 
 // States
@@ -16,6 +18,10 @@
 
 class LightScreen : public UIScreen
 {
+	// Screen values
+	float screen_width;
+	float screen_height;
+
 	// Menu Values
 	float menuWidth;
 
@@ -32,6 +38,7 @@ class LightScreen : public UIScreen
 	float x1,x2,y1,y2;
 
 	// UI Components
+	UILabel* lTitle;
 	UIButton* bShow;
 	UIButton* bHide;
 	UIButton* bMove;
@@ -81,5 +88,15 @@ public:
 
 	// Remove box from list 
 	void removeBox(Box* box);
+
+private:
+
+	// Clamp x add location 
+	int clampAddX(float x);
+	// Clamp y add location
+	int clampAddY(float y);
+
+	// Get string for state 
+	std::string getStateString();
 };
 

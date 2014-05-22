@@ -3,6 +3,12 @@
 
 LightScreen::LightScreen() : UIScreen()
 {
+	// Screen values
+	screen_width = screen_height = 0.0f;
+
+	// Menu Values
+	menuWidth = 150.0f;
+
 	// States 
 	screenShown = true;
 	drawLight = false;
@@ -43,6 +49,8 @@ LightScreen::~LightScreen()
 void LightScreen::init(float screen_width, float screen_height){
 	UIScreen::init(screen_width, screen_height);
 
+	this->screen_width = screen_width;
+	this->screen_height = screen_height;
 	float spacing = 5.0f;
 
 	// Create screen show button 
@@ -114,17 +122,18 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 		// Update add state 
 		else if (state == LSTATE_ADD){
 			if (subState == SADD_START){
-				// Check for click 
-				if (mMouseH->isLeftDown() && !mMouseH->wasLeftDown())
+				// Check for click and make sure not clicking on menu 
+				if (mMouseH->isLeftDown() && !mMouseH->wasLeftDown() 
+					&& mMouseH->getX() > menuWidth)
 				{
-					x1 = mMouseH->getX();
-					y1 = mMouseH->getY();
+					x1 = x2 = clampAddX(mMouseH->getX());
+					y1 = y2 = clampAddY(mMouseH->getY());
 					subState = SADD_DRAG;
 				}
 			}
 			else if (subState == SADD_DRAG){
-				x2 = mMouseH->getX();
-				y2 = mMouseH->getY();
+				x2 = clampAddX(mMouseH->getX());
+				y2 = clampAddY(mMouseH->getY());
 
 				// Check for release 
 				if (!mMouseH->isLeftDown() && mMouseH->wasLeftDown())
@@ -190,6 +199,12 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	drawState(mgl, (UIAtlas*)mAtlas);
 
 	// Draw UI 
+	mgl->setFlatColor(.0f,.0f,.0f,bMove->getOpacity());
+	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, 0.0f,0.0f,menuWidth+1.0f, screen_height);
+	mgl->setFlatColor(.19f,.2f,.2f,bMove->getOpacity());
+	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, 0.0f,0.0f,menuWidth, screen_height);
+
+	// Draw buttons
 	bShow->draw(mgl, (UIAtlas*)mAtlas);
 	bHide->draw(mgl, (UIAtlas*)mAtlas);
 	bMove->draw(mgl, (UIAtlas*)mAtlas);
@@ -253,4 +268,41 @@ void LightScreen::removeBox(Box* box){
 
 	// Remove box 
 	bHand->remove(box);
+}
+
+// Clamp x add location 
+int LightScreen::clampAddX(float x){
+	if (x < menuWidth)
+		return menuWidth;
+	if (x > screen_width)
+		return screen_width;
+	return x;
+}
+// Clamp y add location
+int LightScreen::clampAddY(float y){
+	if (y < 0.0f)
+		return 0.0f;
+	if (y > screen_height)
+		return screen_height;
+	return y;
+}
+
+// Get string for state 
+std::string LightScreen::getStateString(){
+	if (state == LSTATE_MOVE){
+
+	}
+	else if (state == LSTATE_ADD){
+		if (subState == SADD_START){
+			
+		}
+		else if (subState == SADD_DRAG){
+			
+		} 
+	}
+	else if (state == LSTATE_REMOVE){
+
+	}
+
+	return std::string("");
 }
