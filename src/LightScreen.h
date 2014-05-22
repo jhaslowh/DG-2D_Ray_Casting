@@ -12,9 +12,14 @@
 #define LSTATE_ADD 1
 #define LSTATE_REMOVE 2
 
+// Move object states 
+#define SMOVE_START 3
+#define SMOVE_BOX 4 
+#define SMOVE_LIGHT 5
+
 // Adding sub states
-#define SADD_START 0
-#define SADD_DRAG 1
+#define SADD_START 6
+#define SADD_DRAG 7
 
 class LightScreen : public UIScreen
 {
@@ -34,8 +39,9 @@ class LightScreen : public UIScreen
 	// List of boxes 
 	BoxHandler* bHand;
 
-	// Add state variables 
-	float x1,x2,y1,y2;
+	// state variables 
+	Box* moveBox;		// Box being moved 
+	float x1,x2,y1,y2; // Location temps to use with mouse
 
 	// UI Components
 	UILabel* lTitle;
@@ -91,10 +97,15 @@ public:
 
 private:
 
-	// Clamp x add location 
-	int clampAddX(float x);
-	// Clamp y add location
-	int clampAddY(float y);
+	// Clamp x location 
+	int clampX(float x);
+	// Clamp y location
+	int clampY(float y);
+
+	// Check if valid x loc
+	bool validX(float x);
+	// Check if valid y loc
+	bool validY(float y);
 
 	// Get string for state 
 	std::string getStateString();

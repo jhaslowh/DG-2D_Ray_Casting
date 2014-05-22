@@ -13,10 +13,13 @@ LightScreen::LightScreen() : UIScreen()
 	screenShown = true;
 	drawLight = false;
 	state = LSTATE_MOVE;
-	subState = 0;
+	subState = SMOVE_START;
 
 	// Create box handler
 	bHand = new BoxHandler(100);
+
+	// Move state variables 
+	moveBox = NULL;
 
 	// Add state variables 
 	x1 = x2 = y1 = y2 = 0.0f;
@@ -128,7 +131,62 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 	{
 		// Update move state
 		if (state == LSTATE_MOVE){
-			// TODO 
+			if (subState == SMOVE_START){
+				// Check for click and make sure not clicking on menu 
+				if (mMouseH->isLeftDown() && !mMouseH->wasLeftDown()
+					&& mMouseH->getX() > menuWidth)
+				{
+					x1 = clampX(mMouseH->getX());
+					y1 = clampY(mMouseH->getY());
+
+					// Check if clicking box
+					Box* b = bHand->contains(x1, y1);
+					if (b != NULL){
+						moveBox = b;
+						subState = SMOVE_BOX;
+						lTitle->setText(getStateString());
+						return;
+					}
+
+					// TODO check for click on light 
+				}
+			}
+			else if (subState == SMOVE_BOX){
+				// Check for release 
+				if (!mMouseH->isLeftDown() && mMouseH->wasLeftDown())
+				{
+					moveBox = NULL;
+					subState = SMOVE_START;
+					lTitle->setText(getStateString());
+					return;
+				}
+
+				// Get distance change 
+				x2 = clampX(mMouseH->getX()) - x1;
+				y2 = clampY(mMouseH->getY()) - y1;
+
+				// Check if valid 
+				bool validMove = true;
+				if (!validX(moveBox->getX() + x2) ||
+					!validX(moveBox->getX() + moveBox->getWidth() + x2) ||
+					!validY(moveBox->getY() + y2) ||
+					!validY(moveBox->getY() + moveBox->getHeight() + y2))
+					validMove = false;
+				
+				// Move if valid 
+				if (validMove){
+					moveBox->setLocation(
+						moveBox->getX() + x2,
+						moveBox->getY() + y2);
+				}
+
+				// Set old location 
+				x1 = clampX(mMouseH->getX());
+				y1 = clampY(mMouseH->getY());
+			}
+			else if (subState == SMOVE_LIGHT){
+				// TODO 
+			}
 		}
 		// Update add state 
 		else if (state == LSTATE_ADD){
@@ -137,15 +195,15 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 				if (mMouseH->isLeftDown() && !mMouseH->wasLeftDown() 
 					&& mMouseH->getX() > menuWidth)
 				{
-					x1 = x2 = clampAddX(mMouseH->getX());
-					y1 = y2 = clampAddY(mMouseH->getY());
+					x1 = x2 = clampX(mMouseH->getX());
+					y1 = y2 = clampY(mMouseH->getY());
 					subState = SADD_DRAG;
 					lTitle->setText(getStateString());
 				}
 			}
 			else if (subState == SADD_DRAG){
-				x2 = clampAddX(mMouseH->getX());
-				y2 = clampAddY(mMouseH->getY());
+				x2 = clampX(mMouseH->getX());
+				y2 = clampY(mMouseH->getY());
 
 				// Check for release 
 				if (!mMouseH->isLeftDown() && mMouseH->wasLeftDown())
@@ -167,6 +225,7 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 		bMove->updateInput(mKeyH, mMouseH);
 		if (bMove->wasClicked()){
 			state = LSTATE_MOVE;
+			subState = SMOVE_START;
 			lTitle->setText(getStateString());
 		}
 		bAdd->updateInput(mKeyH, mMouseH);
@@ -296,7 +355,7 @@ void LightScreen::removeBox(Box* box){
 }
 
 // Clamp x add location 
-int LightScreen::clampAddX(float x){
+int LightScreen::clampX(float x){
 	if (x < menuWidth)
 		return menuWidth;
 	if (x > screen_width)
@@ -304,7 +363,7 @@ int LightScreen::clampAddX(float x){
 	return x;
 }
 // Clamp y add location
-int LightScreen::clampAddY(float y){
+int LightScreen::clampY(float y){
 	if (y < 0.0f)
 		return 0.0f;
 	if (y > screen_height)
@@ -312,22 +371,47 @@ int LightScreen::clampAddY(float y){
 	return y;
 }
 
+// Check if valid x loc
+bool LightScreen::validX(float x){
+	if (x < menuWidth)
+		return false;
+	if (x > screen_width)
+		return false;
+	return true;
+}
+// Check if valid y loc
+bool LightScreen::validY(float y){
+	if (y < 0.0f)
+		return false;
+	if (y > screen_height)
+		return false;
+	return true;
+}
+
 // Get string for state 
 std::string LightScreen::getStateString(){
-	if (state == LSTATE_MOVE){
-		return std::string("State: Move Object");
-	}
-	else if (state == LSTATE_ADD){
-		if (subState == SADD_START){
-			return std::string("State: Add Object Start");
+	switch (state){
+	case LSTATE_MOVE:
+		switch (subState){
+		case SMOVE_START:
+			return std::string("State: Move Object Select");
+		case SMOVE_BOX:
+			return std::string("State: Move Box");
+		case SMOVE_LIGHT:
+			return std::string("State: Move Light");
 		}
-		else if (subState == SADD_DRAG){
+		break;
+	case LSTATE_ADD:
+		switch (subState){
+		case SADD_START:
+			return std::string("State: Add Object Start");
+		case SADD_DRAG:
 			return std::string("State: Add Object Drag");
-		} 
-	}
-	else if (state == LSTATE_REMOVE){
+		}
+		break;
+	case LSTATE_REMOVE:
 		return std::string("State: Remove Object");
+	default:
+		return std::string("");
 	}
-
-	return std::string("");
 }
