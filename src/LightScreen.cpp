@@ -27,6 +27,7 @@ LightScreen::LightScreen() : UIScreen()
 	bMove = NULL;
 	bAdd = NULL;
 	bRemove = NULL;
+	lTitle = NULL;
 }
 
 LightScreen::~LightScreen()
@@ -43,6 +44,8 @@ LightScreen::~LightScreen()
 	bRemove = NULL;
 	delete bHand;
 	bHand = NULL;
+	delete lTitle;
+	lTitle = NULL;
 }
 	
 // Initialize screen
@@ -53,6 +56,13 @@ void LightScreen::init(float screen_width, float screen_height){
 	this->screen_height = screen_height;
 	float spacing = 5.0f;
 
+	// Create title 
+	lTitle = new UILabel(getStateString());
+	lTitle->setLocation(menuWidth + 10.0f, 10.0f);
+	lTitle->setTextSize(25.0f);
+	lTitle->setColor(.5f,.5f,.5f,1.0f);
+	lTitle->setupHide(HT_VERTICAL,lTitle->getY()-40.0f,.2f,true);
+	lTitle->setHidden();
 	// Create screen show button 
 	bShow = new UIButton(10.0f,screen_height-45.0f,100.0f,35.0f, std::string("Show"));
 	bShow->setupHide(HT_VERTICAL,bShow->getY()+40.0f,.2f,true);
@@ -101,6 +111,7 @@ void LightScreen::unload(){
 void LightScreen::update(float deltaTime){
 	UIScreen::update(deltaTime);
 
+	lTitle->update(deltaTime);
 	bShow->update(deltaTime);
 	bHide->update(deltaTime);
 	bMove->update(deltaTime);
@@ -129,6 +140,7 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 					x1 = x2 = clampAddX(mMouseH->getX());
 					y1 = y2 = clampAddY(mMouseH->getY());
 					subState = SADD_DRAG;
+					lTitle->setText(getStateString());
 				}
 			}
 			else if (subState == SADD_DRAG){
@@ -140,26 +152,34 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 				{
 					addBox(std::min(x1,x2), std::min(y1,y2), abs(x1-x2), abs(y1-y2));
 					subState = SADD_START;
+					lTitle->setText(getStateString());
 				}
 			} 
 		}
 		// Update remove state 
 		else if (state == LSTATE_REMOVE){
-			// TODO 
+			if (mMouseH->isLeftDown() && !mMouseH->wasLeftDown()){
+				removeBox(bHand->contains(mMouseH->getX(), mMouseH->getY()));
+			}
 		}
 
 		// Swap screen states
 		bMove->updateInput(mKeyH, mMouseH);
-		if (bMove->wasClicked())
+		if (bMove->wasClicked()){
 			state = LSTATE_MOVE;
+			lTitle->setText(getStateString());
+		}
 		bAdd->updateInput(mKeyH, mMouseH);
 		if (bAdd->wasClicked()){
 			state = LSTATE_ADD;
 			subState = SADD_START;
+			lTitle->setText(getStateString());
 		}
 		bRemove->updateInput(mKeyH, mMouseH);
-		if (bRemove->wasClicked())
+		if (bRemove->wasClicked()){
 			state = LSTATE_REMOVE;
+			lTitle->setText(getStateString());
+		}
 
 		// Check for hide screen
 		bHide->updateInput(mKeyH, mMouseH);
@@ -205,6 +225,7 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, 0.0f,0.0f,menuWidth, screen_height);
 
 	// Draw buttons
+	lTitle->draw(mgl, (UIAtlas*)mAtlas);
 	bShow->draw(mgl, (UIAtlas*)mAtlas);
 	bHide->draw(mgl, (UIAtlas*)mAtlas);
 	bMove->draw(mgl, (UIAtlas*)mAtlas);
@@ -227,6 +248,7 @@ void LightScreen::drawState(GLHandler* mgl, UIAtlas* mUI){
 void LightScreen::hide(){
 	UIScreen::hide();
 
+	lTitle->hide();
 	bShow->show();
 	bHide->hide();
 	bMove->hide();
@@ -241,6 +263,7 @@ void LightScreen::hide(){
 void LightScreen::show(){
 	UIScreen::show();
 	
+	lTitle->show();
 	bHide->show();
 	bShow->hide();
 	bMove->show();
@@ -264,6 +287,8 @@ void LightScreen::addBox(float x, float y, float width, float height){
 
 // Remove box from list 
 void LightScreen::removeBox(Box* box){
+	if (box == NULL) return;
+
 	// TODO remove corners and walls from light map 
 
 	// Remove box 
@@ -290,18 +315,18 @@ int LightScreen::clampAddY(float y){
 // Get string for state 
 std::string LightScreen::getStateString(){
 	if (state == LSTATE_MOVE){
-
+		return std::string("State: Move Object");
 	}
 	else if (state == LSTATE_ADD){
 		if (subState == SADD_START){
-			
+			return std::string("State: Add Object Start");
 		}
 		else if (subState == SADD_DRAG){
-			
+			return std::string("State: Add Object Drag");
 		} 
 	}
 	else if (state == LSTATE_REMOVE){
-
+		return std::string("State: Remove Object");
 	}
 
 	return std::string("");
