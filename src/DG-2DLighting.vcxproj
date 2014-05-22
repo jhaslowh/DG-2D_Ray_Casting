@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{00371AE3-6D7E-45AF-89BC-C5C7B2E43F82}</ProjectGuid>
+    <RootNamespace>DG2DLighting</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lib\glew32.lib;lib\SOIL\SOIL.lib;lib\SDL2.lib;lib\SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>lib\glew32.lib;lib\SOIL\SOIL.lib;lib\SDL2.lib;lib\SDL2main.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="AtlasSprite.h" />
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="BoxHandler.h" />
+    <ClInclude Include="Camera2D.h" />
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="FileHelper.h" />
+    <ClInclude Include="GLColors.h" />
+    <ClInclude Include="GLHandler.h" />
+    <ClInclude Include="KeyHandler.h" />
+    <ClInclude Include="LightMap.h" />
+    <ClInclude Include="LightScreen.h" />
+    <ClInclude Include="main.h" />
+    <ClInclude Include="MouseHandler.h" />
+    <ClInclude Include="Point.h" />
+    <ClInclude Include="Rec.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TextRender.h" />
+    <ClInclude Include="TextureAtlas.h" />
+    <ClInclude Include="UIAtlas.h" />
+    <ClInclude Include="UIButton.h" />
+    <ClInclude Include="UICheckbox.h" />
+    <ClInclude Include="UILabel.h" />
+    <ClInclude Include="UIObject.h" />
+    <ClInclude Include="UIScreen.h" />
+    <ClInclude Include="UITransitionObject.h" />
+    <ClInclude Include="UIValueSlider.h" />
+    <ClInclude Include="VertCordGenerator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AtlasSprite.cpp" />
+    <ClCompile Include="Box.cpp" />
+    <ClCompile Include="BoxHandler.cpp" />
+    <ClCompile Include="Camera2D.cpp" />
+    <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="FileHelper.cpp" />
+    <ClCompile Include="GLColors.cpp" />
+    <ClCompile Include="GLHandler.cpp" />
+    <ClCompile Include="KeyHandler.cpp" />
+    <ClCompile Include="LightMap.cpp" />
+    <ClCompile Include="LightScreen.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MouseHandler.cpp" />
+    <ClCompile Include="Point.cpp" />
+    <ClCompile Include="Rec.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TextRender.cpp" />
+    <ClCompile Include="TextureAtlas.cpp" />
+    <ClCompile Include="UIAtlas.cpp" />
+    <ClCompile Include="UIButton.cpp" />
+    <ClCompile Include="UICheckbox.cpp" />
+    <ClCompile Include="UILabel.cpp" />
+    <ClCompile Include="UIObject.cpp" />
+    <ClCompile Include="UIScreen.cpp" />
+    <ClCompile Include="UITransitionObject.cpp" />
+    <ClCompile Include="UIValueSlider.cpp" />
+    <ClCompile Include="VertCordGenerator.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
