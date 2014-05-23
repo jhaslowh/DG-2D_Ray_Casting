@@ -161,6 +161,8 @@ void LightScreen::update(float deltaTime){
 	cbShowLight->update(deltaTime);
 	lLightSize->update(deltaTime);
 	vsLightSize->update(deltaTime);
+
+	lMap.update(deltaTime);
 }
 
 // Update input to the screen 
@@ -188,8 +190,6 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 						lTitle->setText(getStateString());
 						return;
 					}
-
-					// TODO check for click on light 
 				}
 			}
 			else if (subState == SMOVE_BOX){
@@ -219,14 +219,12 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 					moveBox->setLocation(
 						moveBox->getX() + x2,
 						moveBox->getY() + y2);
+					lMap.invalidate();
 				}
 
 				// Set old location 
 				x1 = clampX(mMouseH->getX());
 				y1 = clampY(mMouseH->getY());
-			}
-			else if (subState == SMOVE_LIGHT){
-				// TODO 
 			}
 		}
 		// Update add state 
@@ -285,6 +283,7 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 		bClear->updateInput(mKeyH, mMouseH);
 		if (bClear->wasClicked()){
 			bHand->clear();
+			lMap.clear();
 		}
 
 		// Check for show light
@@ -293,11 +292,9 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 
 		// Update light size
 		vsLightSize->updateInput(mKeyH, mMouseH);
-		/*
-		if (vsLightSize->getSize() != lightmap size)
-		set and invalidate map 
-		TODO 
-		*/
+		if (abs(vsLightSize->getValue() - lMap.getLightSize()) > 0.000001f){
+			lMap.setLightSize(vsLightSize->getValue());
+		}
 
 		// Check for hide screen
 		bHide->updateInput(mKeyH, mMouseH);
@@ -320,7 +317,7 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	// Draw lights
 	if (drawLight){
 		mgl->lightBegin(0.0f,0.0f,0.0f);
-		// TODO Draw light
+		lMap.drawMap(mgl);
 		mgl->lightEnd();
 	}
 
@@ -409,19 +406,41 @@ void LightScreen::addBox(float x, float y, float width, float height){
 	}
 
 	// add box 
-	bHand->add(x,y,width,height);
+	Box* b = bHand->add(x,y,width,height);
 
-	// TODO add corners and walls to light map 
+	if (b != NULL){
+		// Add corners 
+		lMap.addPoint(b->getCornerTopLeft());
+		lMap.addPoint(b->getCornerTopRight());
+		lMap.addPoint(b->getCornerBottomLeft());
+		lMap.addPoint(b->getCornerBottomRight());
+
+		// Add walls 
+		lMap.addSeg(Seg(b->getCornerTopLeft(), b->getCornerTopRight()));
+		lMap.addSeg(Seg(b->getCornerTopRight(), b->getCornerBottomRight()));
+		lMap.addSeg(Seg(b->getCornerBottomRight(), b->getCornerBottomLeft()));
+		lMap.addSeg(Seg(b->getCornerBottomLeft(), b->getCornerTopLeft()));
+	}
 }
 
 // Remove box from list 
-void LightScreen::removeBox(Box* box){
-	if (box == NULL) return;
+void LightScreen::removeBox(Box* b){
+	if (b == NULL) return;
 
-	// TODO remove corners and walls from light map 
+	// Add corners 
+	lMap.removePoint(b->getCornerTopLeft());
+	lMap.removePoint(b->getCornerTopRight());
+	lMap.removePoint(b->getCornerBottomLeft());
+	lMap.removePoint(b->getCornerBottomRight());
+
+	// Add walls 
+	lMap.removeSeg(Seg(b->getCornerTopLeft(), b->getCornerTopRight()));
+	lMap.removeSeg(Seg(b->getCornerTopRight(), b->getCornerBottomRight()));
+	lMap.removeSeg(Seg(b->getCornerBottomRight(), b->getCornerBottomLeft()));
+	lMap.removeSeg(Seg(b->getCornerBottomLeft(), b->getCornerTopLeft()));
 
 	// Remove box 
-	bHand->remove(box);
+	bHand->remove(b);
 }
 
 // Clamp x add location 
@@ -467,8 +486,6 @@ std::string LightScreen::getStateString(){
 			return std::string("State: Move Object Select");
 		case SMOVE_BOX:
 			return std::string("State: Move Box");
-		case SMOVE_LIGHT:
-			return std::string("State: Move Light");
 		}
 		break;
 	case LSTATE_ADD:

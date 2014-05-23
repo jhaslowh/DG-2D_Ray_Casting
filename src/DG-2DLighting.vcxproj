@@ -92,6 +92,7 @@
     <ClInclude Include="MouseHandler.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Rec.h" />
+    <ClInclude Include="Seg.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextRender.h" />
     <ClInclude Include="TextureAtlas.h" />
@@ -121,6 +122,7 @@
     <ClCompile Include="MouseHandler.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Rec.cpp" />
+    <ClCompile Include="Seg.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextRender.cpp" />
     <ClCompile Include="TextureAtlas.cpp" />

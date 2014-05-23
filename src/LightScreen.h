@@ -8,6 +8,7 @@
 #include "UICheckbox.h"
 #include "UIValueSlider.h"
 #include "BoxHandler.h"
+#include "LightMap.h"
 
 // States
 #define LSTATE_MOVE 0
@@ -17,7 +18,6 @@
 // Move object states 
 #define SMOVE_START 3
 #define SMOVE_BOX 4 
-#define SMOVE_LIGHT 5
 
 // Adding sub states
 #define SADD_START 6
@@ -38,8 +38,9 @@ class LightScreen : public UIScreen
 	int state;
 	int subState;
 
-	// List of boxes 
+	// Elements
 	BoxHandler* bHand;
+	LightMap lMap;
 
 	// state variables 
 	Box* moveBox;		// Box being moved 

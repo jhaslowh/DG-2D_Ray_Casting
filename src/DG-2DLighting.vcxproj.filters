@@ -126,6 +126,9 @@
     <ClInclude Include="UIAtlas.h">
       <Filter>Header Files\gfx</Filter>
     </ClInclude>
+    <ClInclude Include="Seg.h">
+      <Filter>Header Files\phys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -208,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="UIAtlas.cpp">
       <Filter>Source Files\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="Seg.cpp">
+      <Filter>Source Files\phys</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
