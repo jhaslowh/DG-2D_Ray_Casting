@@ -7,7 +7,7 @@ LightScreen::LightScreen() : UIScreen()
 	screen_width = screen_height = 0.0f;
 
 	// Menu Values
-	menuWidth = 150.0f;
+	menuWidth = 135.0f;
 
 	// States 
 	screenShown = true;
@@ -33,6 +33,8 @@ LightScreen::LightScreen() : UIScreen()
 	lTitle = NULL;
 	bClear = NULL;
 	cbShowLight = NULL;
+	lLightSize = NULL;
+	vsLightSize = NULL;
 }
 
 LightScreen::~LightScreen()
@@ -55,6 +57,10 @@ LightScreen::~LightScreen()
 	bClear = NULL;
 	delete cbShowLight;
 	cbShowLight = NULL;
+	delete lLightSize;
+	lLightSize = NULL;
+	delete vsLightSize;
+	vsLightSize = NULL;
 }
 	
 // Initialize screen
@@ -101,6 +107,21 @@ void LightScreen::init(float screen_width, float screen_height){
 	cbShowLight->setupHide(HT_HOROZONTAL,cbShowLight->getX()-150.0f,.2f,true);
 	cbShowLight->setHidden();
 	cbShowLight->setTextColor(.8f,.8f,.8f);
+	// Create light size label
+	lLightSize = new UILabel(std::string("Light Size"));
+	lLightSize->setLocation(14.0f, 200.0f);
+	lLightSize->setTextSize(16.0f);
+	lLightSize->setColor(.8f,.8f,.8f,1.0f);
+	lLightSize->setupHide(HT_HOROZONTAL,lLightSize->getX()-150.0f,.2f,true);
+	lLightSize->setHidden();
+	// Create light size value slider
+	vsLightSize = new UIValueSlider();
+	vsLightSize->setLocation(10.0f, 220.0f);
+	vsLightSize->setMinValue(0.0f);
+	vsLightSize->setMaxValue(1000.0f);
+	vsLightSize->setValue(500.0f);
+	vsLightSize->setupHide(HT_HOROZONTAL, vsLightSize->getX() - 150.0f, .2f, true);
+	vsLightSize->setHidden();
 }
 
 // Load screen
@@ -138,6 +159,8 @@ void LightScreen::update(float deltaTime){
 	bRemove->update(deltaTime);
 	bClear->update(deltaTime);
 	cbShowLight->update(deltaTime);
+	lLightSize->update(deltaTime);
+	vsLightSize->update(deltaTime);
 }
 
 // Update input to the screen 
@@ -268,6 +291,14 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 		cbShowLight->updateInput(mKeyH, mMouseH);
 		drawLight = cbShowLight->Checked();
 
+		// Update light size
+		vsLightSize->updateInput(mKeyH, mMouseH);
+		/*
+		if (vsLightSize->getSize() != lightmap size)
+		set and invalidate map 
+		TODO 
+		*/
+
 		// Check for hide screen
 		bHide->updateInput(mKeyH, mMouseH);
 		if (bHide->wasClicked()) hide();
@@ -320,11 +351,12 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	bRemove->draw(mgl, (UIAtlas*)mAtlas);
 	bClear->draw(mgl, (UIAtlas*)mAtlas);
 	cbShowLight->draw(mgl, (UIAtlas*)mAtlas);
+	lLightSize->draw(mgl, (UIAtlas*)mAtlas);
+	vsLightSize->draw(mgl, (UIAtlas*)mAtlas);
 }
 
 // Draw state 
 void LightScreen::drawState(GLHandler* mgl, UIAtlas* mUI){
-	
 	if (state == LSTATE_ADD && subState == SADD_DRAG){
 		mgl->setFlatColor(.1f,.1f,.1f,1.0f);
 		mUI->drawScale2(mgl, UII_REC,std::min(x1,x2), std::min(y1,y2), abs(x1-x2), abs(y1-y2));
@@ -345,6 +377,8 @@ void LightScreen::hide(){
 	bRemove->hide();
 	bClear->hide();
 	cbShowLight->hide();
+	lLightSize->hide();
+	vsLightSize->hide();
 	screenShown = false;
 }
 
@@ -362,6 +396,8 @@ void LightScreen::show(){
 	bRemove->show();
 	bClear->show();
 	cbShowLight->show();
+	lLightSize->show();
+	vsLightSize->show();
 	screenShown = true;
 }
 
