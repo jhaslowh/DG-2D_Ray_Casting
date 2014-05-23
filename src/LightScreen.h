@@ -14,10 +14,11 @@
 #define LSTATE_MOVE 0
 #define LSTATE_ADD 1
 #define LSTATE_REMOVE 2
+#define LSTATE_SETLIGHT 3
 
 // Move object states 
-#define SMOVE_START 3
-#define SMOVE_BOX 4 
+#define SMOVE_START 4
+#define SMOVE_BOX 5
 
 // Adding sub states
 #define SADD_START 6
@@ -51,6 +52,7 @@ class LightScreen : public UIScreen
 	UIButton* bShow;
 	UIButton* bHide;
 	UIButton* bMove;
+	UIButton* bSetLight;
 	UIButton* bAdd;
 	UIButton* bRemove;
 	UIButton* bClear;

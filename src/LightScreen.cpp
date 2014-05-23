@@ -28,6 +28,7 @@ LightScreen::LightScreen() : UIScreen()
 	bShow = NULL;
 	bHide = NULL;
 	bMove = NULL;
+	bSetLight = NULL;
 	bAdd = NULL;
 	bRemove = NULL;
 	lTitle = NULL;
@@ -45,6 +46,8 @@ LightScreen::~LightScreen()
 	bHide = NULL;
 	delete bMove;
 	bMove = NULL;
+	delete bSetLight;
+	bSetLight = NULL;
 	delete bAdd;
 	bAdd = NULL;
 	delete bRemove;
@@ -90,33 +93,37 @@ void LightScreen::init(float screen_width, float screen_height){
 	bMove = new UIButton(10.0f,10.0f,100.0f,35.0f, std::string("Move"));
 	bMove->setupHide(HT_HOROZONTAL,bMove->getX()-150.0f,.2f,true);
 	bMove->setHidden();
+	// Create move light button 
+	bSetLight = new UIButton(10.0f,50.0f,100.0f,35.0f, std::string("Set Light"));
+	bSetLight->setupHide(HT_HOROZONTAL,bSetLight->getX()-150.0f,.2f,true);
+	bSetLight->setHidden();
 	// Create add button 
-	bAdd = new UIButton(10.0f,50.0f,100.0f,35.0f, std::string("Add"));
+	bAdd = new UIButton(10.0f,90.0f,100.0f,35.0f, std::string("Add"));
 	bAdd->setupHide(HT_HOROZONTAL,bAdd->getX()-150.0f,.2f,true);
 	bAdd->setHidden();
 	// Create remove button 
-	bRemove = new UIButton(10.0f,90.0f,100.0f,35.0f, std::string("Remove"));
+	bRemove = new UIButton(10.0f,130.0f,100.0f,35.0f, std::string("Remove"));
 	bRemove->setupHide(HT_HOROZONTAL,bRemove->getX()-150.0f,.2f,true);
 	bRemove->setHidden();
 	// Create clear button 
-	bClear = new UIButton(10.0f,130.0f,100.0f,35.0f, std::string("Clear"));
+	bClear = new UIButton(10.0f,170.0f,100.0f,35.0f, std::string("Clear"));
 	bClear->setupHide(HT_HOROZONTAL,bClear->getX()-150.0f,.2f,true);
 	bClear->setHidden();
 	// Create show light checkbox 
-	cbShowLight = new UICheckbox(10.0f, 170.0f,24.0f,24.0f,std::string("Show Light"));
+	cbShowLight = new UICheckbox(10.0f, 210.0f,24.0f,24.0f,std::string("Show Light"));
 	cbShowLight->setupHide(HT_HOROZONTAL,cbShowLight->getX()-150.0f,.2f,true);
 	cbShowLight->setHidden();
 	cbShowLight->setTextColor(.8f,.8f,.8f);
 	// Create light size label
 	lLightSize = new UILabel(std::string("Light Size"));
-	lLightSize->setLocation(14.0f, 200.0f);
+	lLightSize->setLocation(14.0f, 240.0f);
 	lLightSize->setTextSize(16.0f);
 	lLightSize->setColor(.8f,.8f,.8f,1.0f);
 	lLightSize->setupHide(HT_HOROZONTAL,lLightSize->getX()-150.0f,.2f,true);
 	lLightSize->setHidden();
 	// Create light size value slider
 	vsLightSize = new UIValueSlider();
-	vsLightSize->setLocation(10.0f, 220.0f);
+	vsLightSize->setLocation(10.0f, 260.0f);
 	vsLightSize->setMinValue(0.0f);
 	vsLightSize->setMaxValue(1000.0f);
 	vsLightSize->setValue(500.0f);
@@ -137,6 +144,7 @@ void LightScreen::load(TextureAtlas* mAtlas){
 	bAdd->centerText(mUI->mTextRender);
 	bRemove->centerText(mUI->mTextRender);
 	bClear->centerText(mUI->mTextRender);
+	bSetLight->centerText(mUI->mTextRender);
 
 	show();
 }
@@ -155,6 +163,7 @@ void LightScreen::update(float deltaTime){
 	bShow->update(deltaTime);
 	bHide->update(deltaTime);
 	bMove->update(deltaTime);
+	bSetLight->update(deltaTime);
 	bAdd->update(deltaTime);
 	bRemove->update(deltaTime);
 	bClear->update(deltaTime);
@@ -259,6 +268,13 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 				removeBox(bHand->contains(mMouseH->getX(), mMouseH->getY()));
 			}
 		}
+		// Update set light
+		else if (state == LSTATE_SETLIGHT){
+			if (mMouseH->isLeftDown() && mMouseH->getX() > menuWidth){
+				lMap.setLightLoc(
+					clampX(mMouseH->getX()), clampY(mMouseH->getY()));
+			}
+		}
 
 		// Swap screen states
 		bMove->updateInput(mKeyH, mMouseH);
@@ -276,6 +292,11 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 		bRemove->updateInput(mKeyH, mMouseH);
 		if (bRemove->wasClicked()){
 			state = LSTATE_REMOVE;
+			lTitle->setText(getStateString());
+		}
+		bSetLight->updateInput(mKeyH, mMouseH);
+		if (bSetLight->wasClicked()){
+			state = LSTATE_SETLIGHT;
 			lTitle->setText(getStateString());
 		}
 		
@@ -344,6 +365,7 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	bShow->draw(mgl, (UIAtlas*)mAtlas);
 	bHide->draw(mgl, (UIAtlas*)mAtlas);
 	bMove->draw(mgl, (UIAtlas*)mAtlas);
+	bSetLight->draw(mgl, (UIAtlas*)mAtlas);
 	bAdd->draw(mgl, (UIAtlas*)mAtlas);
 	bRemove->draw(mgl, (UIAtlas*)mAtlas);
 	bClear->draw(mgl, (UIAtlas*)mAtlas);
@@ -376,6 +398,7 @@ void LightScreen::hide(){
 	cbShowLight->hide();
 	lLightSize->hide();
 	vsLightSize->hide();
+	bSetLight->hide();
 	screenShown = false;
 }
 
@@ -395,6 +418,7 @@ void LightScreen::show(){
 	cbShowLight->show();
 	lLightSize->show();
 	vsLightSize->show();
+	bSetLight->show();
 	screenShown = true;
 }
 
@@ -498,6 +522,8 @@ std::string LightScreen::getStateString(){
 		break;
 	case LSTATE_REMOVE:
 		return std::string("State: Remove Object");
+	case LSTATE_SETLIGHT:
+		return std::string("State: Move Light");
 	default:
 		return std::string("");
 	}
