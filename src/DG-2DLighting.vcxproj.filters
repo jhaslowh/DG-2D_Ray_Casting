@@ -90,9 +90,6 @@
     <ClInclude Include="TextureAtlas.h">
       <Filter>Header Files\gfx</Filter>
     </ClInclude>
-    <ClInclude Include="UIAtlas.h">
-      <Filter>Header Files\ui</Filter>
-    </ClInclude>
     <ClInclude Include="UIValueSlider.h">
       <Filter>Header Files\ui</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="BoxHandler.h">
       <Filter>Header Files\light</Filter>
+    </ClInclude>
+    <ClInclude Include="UIAtlas.h">
+      <Filter>Header Files\gfx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -173,9 +173,6 @@
     <ClCompile Include="VertCordGenerator.cpp">
       <Filter>Source Files\gfx</Filter>
     </ClCompile>
-    <ClCompile Include="UIAtlas.cpp">
-      <Filter>Source Files\ui</Filter>
-    </ClCompile>
     <ClCompile Include="UIValueSlider.cpp">
       <Filter>Source Files\ui</Filter>
     </ClCompile>
@@ -208,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="BoxHandler.cpp">
       <Filter>Source Files\light</Filter>
+    </ClCompile>
+    <ClCompile Include="UIAtlas.cpp">
+      <Filter>Source Files\gfx</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
