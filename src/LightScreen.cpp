@@ -31,6 +31,7 @@ LightScreen::LightScreen() : UIScreen()
 	bAdd = NULL;
 	bRemove = NULL;
 	lTitle = NULL;
+	bClear = NULL;
 }
 
 LightScreen::~LightScreen()
@@ -49,6 +50,8 @@ LightScreen::~LightScreen()
 	bHand = NULL;
 	delete lTitle;
 	lTitle = NULL;
+	delete bClear;
+	bClear = NULL;
 }
 	
 // Initialize screen
@@ -86,6 +89,10 @@ void LightScreen::init(float screen_width, float screen_height){
 	bRemove = new UIButton(10.0f,90.0f,100.0f,35.0f, std::string("Remove"));
 	bRemove->setupHide(HT_HOROZONTAL,bRemove->getX()-150.0f,.2f,true);
 	bRemove->setHidden();
+	// Create clear button 
+	bClear = new UIButton(10.0f,130.0f,100.0f,35.0f, std::string("Clear"));
+	bClear->setupHide(HT_HOROZONTAL,bClear->getX()-150.0f,.2f,true);
+	bClear->setHidden();
 }
 
 // Load screen
@@ -100,6 +107,7 @@ void LightScreen::load(TextureAtlas* mAtlas){
 	bMove->centerText(mUI->mTextRender);
 	bAdd->centerText(mUI->mTextRender);
 	bRemove->centerText(mUI->mTextRender);
+	bClear->centerText(mUI->mTextRender);
 
 	show();
 }
@@ -120,6 +128,7 @@ void LightScreen::update(float deltaTime){
 	bMove->update(deltaTime);
 	bAdd->update(deltaTime);
 	bRemove->update(deltaTime);
+	bClear->update(deltaTime);
 }
 
 // Update input to the screen 
@@ -239,6 +248,12 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 			state = LSTATE_REMOVE;
 			lTitle->setText(getStateString());
 		}
+		
+		// Check for clear boxes
+		bClear->updateInput(mKeyH, mMouseH);
+		if (bClear->wasClicked()){
+			bHand->clear();
+		}
 
 		// Check for hide screen
 		bHide->updateInput(mKeyH, mMouseH);
@@ -290,6 +305,7 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	bMove->draw(mgl, (UIAtlas*)mAtlas);
 	bAdd->draw(mgl, (UIAtlas*)mAtlas);
 	bRemove->draw(mgl, (UIAtlas*)mAtlas);
+	bClear->draw(mgl, (UIAtlas*)mAtlas);
 }
 
 // Draw state 
@@ -313,6 +329,7 @@ void LightScreen::hide(){
 	bMove->hide();
 	bAdd->hide();
 	bRemove->hide();
+	bClear->hide();
 	screenShown = false;
 }
 
@@ -328,6 +345,7 @@ void LightScreen::show(){
 	bMove->show();
 	bAdd->show();
 	bRemove->show();
+	bClear->show();
 	screenShown = true;
 }
 

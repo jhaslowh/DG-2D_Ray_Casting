@@ -28,6 +28,9 @@ public:
 	// Remove 
 	void remove(Box* box);
 
+	// Clear handlers
+	void clear();
+
 	// Find the box that contains the point
 	Box* contains(float x, float y);
 };

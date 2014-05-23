@@ -50,6 +50,7 @@ class LightScreen : public UIScreen
 	UIButton* bMove;
 	UIButton* bAdd;
 	UIButton* bRemove;
+	UIButton* bClear;
 
 public:
 	LightScreen();

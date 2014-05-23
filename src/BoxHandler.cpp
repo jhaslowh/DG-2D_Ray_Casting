@@ -71,6 +71,15 @@ void BoxHandler::remove(Box* box){
 	}
 }
 
+// Clear handlers
+void BoxHandler::clear(){
+	for (int i = 0; i < capacity; i++){
+		delete boxes[i];
+		boxes[i] = NULL;
+	}
+	size = 0;
+}
+
 // Find the box that contains the point
 Box* BoxHandler::contains(float x, float y){
 	for (int i = 0; i < capacity; i++){
