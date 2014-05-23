@@ -5,6 +5,7 @@
 #include "UIScreen.h"
 #include "UIButton.h"
 #include "UILabel.h"
+#include "UICheckbox.h"
 #include "BoxHandler.h"
 
 // States
@@ -51,6 +52,7 @@ class LightScreen : public UIScreen
 	UIButton* bAdd;
 	UIButton* bRemove;
 	UIButton* bClear;
+	UICheckbox* cbShowLight;
 
 public:
 	LightScreen();

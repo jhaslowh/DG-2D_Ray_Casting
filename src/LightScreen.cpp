@@ -32,6 +32,7 @@ LightScreen::LightScreen() : UIScreen()
 	bRemove = NULL;
 	lTitle = NULL;
 	bClear = NULL;
+	cbShowLight = NULL;
 }
 
 LightScreen::~LightScreen()
@@ -52,6 +53,8 @@ LightScreen::~LightScreen()
 	lTitle = NULL;
 	delete bClear;
 	bClear = NULL;
+	delete cbShowLight;
+	cbShowLight = NULL;
 }
 	
 // Initialize screen
@@ -93,6 +96,11 @@ void LightScreen::init(float screen_width, float screen_height){
 	bClear = new UIButton(10.0f,130.0f,100.0f,35.0f, std::string("Clear"));
 	bClear->setupHide(HT_HOROZONTAL,bClear->getX()-150.0f,.2f,true);
 	bClear->setHidden();
+	// Create show light checkbox 
+	cbShowLight = new UICheckbox(10.0f, 170.0f,24.0f,24.0f,std::string("Show Light"));
+	cbShowLight->setupHide(HT_HOROZONTAL,cbShowLight->getX()-150.0f,.2f,true);
+	cbShowLight->setHidden();
+	cbShowLight->setTextColor(.8f,.8f,.8f);
 }
 
 // Load screen
@@ -129,6 +137,7 @@ void LightScreen::update(float deltaTime){
 	bAdd->update(deltaTime);
 	bRemove->update(deltaTime);
 	bClear->update(deltaTime);
+	cbShowLight->update(deltaTime);
 }
 
 // Update input to the screen 
@@ -255,6 +264,10 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 			bHand->clear();
 		}
 
+		// Check for show light
+		cbShowLight->updateInput(mKeyH, mMouseH);
+		drawLight = cbShowLight->Checked();
+
 		// Check for hide screen
 		bHide->updateInput(mKeyH, mMouseH);
 		if (bHide->wasClicked()) hide();
@@ -306,6 +319,7 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	bAdd->draw(mgl, (UIAtlas*)mAtlas);
 	bRemove->draw(mgl, (UIAtlas*)mAtlas);
 	bClear->draw(mgl, (UIAtlas*)mAtlas);
+	cbShowLight->draw(mgl, (UIAtlas*)mAtlas);
 }
 
 // Draw state 
@@ -330,6 +344,7 @@ void LightScreen::hide(){
 	bAdd->hide();
 	bRemove->hide();
 	bClear->hide();
+	cbShowLight->hide();
 	screenShown = false;
 }
 
@@ -346,6 +361,7 @@ void LightScreen::show(){
 	bAdd->show();
 	bRemove->show();
 	bClear->show();
+	cbShowLight->show();
 	screenShown = true;
 }
 
