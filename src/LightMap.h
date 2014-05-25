@@ -4,6 +4,7 @@
 #include "glew.h"
 #include "GLHandler.h"
 #include "Seg.h"
+#include "Collision.h"
 
 class LightMap
 {

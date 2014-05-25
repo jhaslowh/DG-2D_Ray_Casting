@@ -88,12 +88,18 @@ void LightMap::drawMap(GLHandler* mgl){
 
 // Add points
 void LightMap::addPoint(Point* p){
+	if (p == NULL){
+		std::cout << "ERROR: tried to add null point \n";
+	}
 	points.push_back(p);
 	valid = false;
 }
 
 // Remove point from map
 void LightMap::removePoint(Point* p){
+	if (p == NULL){
+		std::cout << "ERROR: tried to remove null point \n";
+	}
 	points.remove(p);
 	valid = false;
 }
@@ -132,7 +138,15 @@ void LightMap::clearDraw(){
 
 // Create new map 
 void LightMap::makeMap(){
-	std::cout << "Update map\n";
+	std::cout << "---------------------\nUpdate map\n---------------------\n";
+	/*std::cout << "Points: ";
+	for (std::list<Point*>::iterator it = points.begin(); it != points.end(); it++)
+		std::cout << (*it) << ", ";
+	std::cout << "\nSegs: ";
+	for (std::list<Seg>::iterator it = segs.begin(); it != segs.end(); it++)
+		std::cout << "(" << (*it).a << ", " << (*it).b << ") ";
+	std::cout << "\n----------------\n";*/
+
 	// Clear array list 
 	rays.clear();
 
@@ -154,20 +168,60 @@ void LightMap::makeMap(){
 
 		// Add ray to list 
 		rays.push_back(seg);
+		seg.a = NULL;
+		seg.b = NULL;
 	}
-
-	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++){
-		std::cout << "Seg: " << seg.a << "\t" << seg.b << "\n";
-	}
-
-	// TODO 
 
 	// Clip Rays 
-	// TODO 
+	Point inter;
+	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++){
+		for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
+			// Check if ray intercepts wall 
+			if (checkSegSeg(*((*it).a), *((*it).b), *((*it2).a), *((*it2).b), &inter)){
+				// Delete old point
+				delete (*it).b;
+				// Add interception as new end point 
+				(*it).b = new Point(inter.getX(), inter.getY());
+			}
+		}
+	}
 
 	// Make drawing triangles 
-	// TODO delete current triagles 
-	// TOTO make new ones 
+	int count = rays.size() + 1;		// Number of vertexes 
+	int niCount = rays.size() * 3;	// Number of indicies 
+
+	// delete current triagles
+	delete[] nlightArray;
+	nlightArray = NULL;
+	delete[] nindicies;
+	nindicies = NULL;
+
+	// Make vertex list 
+	nlightArray = new GLfloat[count * 2];
+	nlightArray[0] = lightX;
+	nlightArray[1] = lightY;
+	int index = 2;
+	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++){
+		nlightArray[index] = (*it).b->getX();
+		index++;
+		nlightArray[index] = (*it).b->getY();
+		index++;
+	}
+
+	// Make index list 
+	nindicies = new GLshort[niCount];
+	for (int i = 0; i < rays.size(); i++){
+		if (i == rays.size() - 1){
+			nindicies[i] = 0;
+			nindicies[i+1] = rays.size();
+			nindicies[i+2] = 1;
+		}
+		else {
+			nindicies[i] = 0;
+			nindicies[i+1] = i+1;
+			nindicies[i+2] = i+2;
+		}
+	}
 
 	valid = true;
 }
