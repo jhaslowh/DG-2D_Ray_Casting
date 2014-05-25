@@ -133,12 +133,41 @@ void LightMap::clearDraw(){
 // Create new map 
 void LightMap::makeMap(){
 	std::cout << "Update map\n";
+	// Clear array list 
+	rays.clear();
+
+	// TODO check if inside any boxes 
 
 	// Create Rays 
+	float angle;
+	Seg seg;
+	for (std::list<Point*>::iterator it = points.begin(); it != points.end(); it++){
+		// Get angle of ray 
+		angle = atan2((*it)->getY() - lightY, (*it)->getX() - lightX);
+		
+		// Make ray 
+		seg.a = new Point(lightX, lightY);
+		seg.b = new Point(
+			lightX + (cos(angle) * lightRaySize),
+			lightY + (sin(angle) * lightRaySize));
+		seg.deletePoints = true;
+
+		// Add ray to list 
+		rays.push_back(seg);
+	}
+
+	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++){
+		std::cout << "Seg: " << seg.a << "\t" << seg.b << "\n";
+	}
+
 	// TODO 
 
 	// Clip Rays 
 	// TODO 
+
+	// Make drawing triangles 
+	// TODO delete current triagles 
+	// TOTO make new ones 
 
 	valid = true;
 }

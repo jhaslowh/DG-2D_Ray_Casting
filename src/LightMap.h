@@ -1,5 +1,6 @@
 #pragma once
 #include <list>
+#include <math.h>
 #include "glew.h"
 #include "GLHandler.h"
 #include "Seg.h"
