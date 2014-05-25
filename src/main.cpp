@@ -235,11 +235,16 @@ void createGame(){
 		current.h = SCREEN_HEIGHT + 100;
 	}
 
+#ifdef WIN32
 	// Create Window 
 	window = SDL_CreateWindow("DG 2D Lighting", 
 			(int)(current.w * .5f - (SCREEN_WIDTH * .5f)), 
 			(int)(current.h * .5f - (SCREEN_HEIGHT * .5f)),  
 			SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
+#else
+	window = SDL_CreateWindow("DG 2D Lighting", 10, 10,  
+			SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
+#endif 
 
 	// Create the window context 
 	SDL_GLContext context = SDL_GL_CreateContext(window);
