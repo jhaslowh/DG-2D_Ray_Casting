@@ -43,7 +43,7 @@ MAIN = build/2DLight
 .PHONY: clean
 
 all: $(MAIN)
-	@echo  UFO Attack has been compiled
+	@echo  2D Light has been compiled
 
 $(MAIN): $(OBJS) 
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
