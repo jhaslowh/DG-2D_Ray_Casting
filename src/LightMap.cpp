@@ -6,6 +6,7 @@ LightMap::LightMap()
 	lightX = lightY = 300.0f;
 	lightRaySize = 500.0f;
 	valid = false;
+	clearDrawb = false;
 
 	// Drawing properties 
 	lightArray = NULL;
@@ -13,6 +14,7 @@ LightMap::LightMap()
 	nlightArray = NULL;
 	nindicies = NULL;
 	iCount = 0;
+	niCount = 0;
 }
 
 LightMap::~LightMap(void)
@@ -75,13 +77,17 @@ void LightMap::drawMap(GLHandler* mgl){
 			nindicies = NULL;
 			iCount = niCount;
 		}
-
+		
 		if (iCount != 0){
+			mgl->toggleTextures(false);
 			/// Set up vertex and coord buffers 
+			glDisableVertexAttribArray(mgl->mTextCordHandle);
 			glEnableVertexAttribArray(mgl->mPositionHandle);
 			glVertexAttribPointer(mgl->mPositionHandle, 2, GL_FLOAT, GL_FALSE, 0, lightArray );
 		
 			glDrawElements(GL_TRIANGLES, iCount, GL_UNSIGNED_SHORT, indicies);
+			mgl->toggleTextures(true);
+			glDisableVertexAttribArray(mgl->mPositionHandle);
 		}
 	}
 }
@@ -139,14 +145,6 @@ void LightMap::clearDraw(){
 // Create new map 
 void LightMap::makeMap(){
 	std::cout << "---------------------\nUpdate map\n---------------------\n";
-	/*std::cout << "Points: ";
-	for (std::list<Point*>::iterator it = points.begin(); it != points.end(); it++)
-		std::cout << (*it) << ", ";
-	std::cout << "\nSegs: ";
-	for (std::list<Seg>::iterator it = segs.begin(); it != segs.end(); it++)
-		std::cout << "(" << (*it).a << ", " << (*it).b << ") ";
-	std::cout << "\n----------------\n";*/
-
 	// Clear array list 
 	rays.clear();
 
@@ -187,8 +185,8 @@ void LightMap::makeMap(){
 	}
 
 	// Make drawing triangles 
-	int count = rays.size() + 1;		// Number of vertexes 
-	int niCount = rays.size() * 3;	// Number of indicies 
+	int count = (rays.size() + 1) * 2;		// Number of vertexes 
+	niCount = rays.size() * 3;	// Number of indicies 
 
 	// delete current triagles
 	delete[] nlightArray;
@@ -197,7 +195,7 @@ void LightMap::makeMap(){
 	nindicies = NULL;
 
 	// Make vertex list 
-	nlightArray = new GLfloat[count * 2];
+	nlightArray = new GLfloat[count];
 	nlightArray[0] = lightX;
 	nlightArray[1] = lightY;
 	int index = 2;
@@ -210,16 +208,18 @@ void LightMap::makeMap(){
 
 	// Make index list 
 	nindicies = new GLshort[niCount];
-	for (int i = 0; i < rays.size(); i++){
-		if (i == rays.size() - 1){
+	int i2 = 0;
+	for (int i = 0; i < niCount; i+=3){
+		if (i == niCount - 3){
 			nindicies[i] = 0;
 			nindicies[i+1] = rays.size();
 			nindicies[i+2] = 1;
 		}
 		else {
 			nindicies[i] = 0;
-			nindicies[i+1] = i+1;
-			nindicies[i+2] = i+2;
+			nindicies[i+1] = i2+1;
+			nindicies[i+2] = i2+2;
+			i2++;
 		}
 	}
 

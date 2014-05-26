@@ -129,6 +129,16 @@ void LightScreen::init(float screen_width, float screen_height){
 	vsLightSize->setValue(500.0f);
 	vsLightSize->setupHide(HT_HOROZONTAL, vsLightSize->getX() - 150.0f, .2f, true);
 	vsLightSize->setHidden();
+
+	// Add corners
+	tlC.setLocation(0.0f,0.0f);
+	trC.setLocation(screen_width, 0.0f);
+	blC.setLocation(0.0f, screen_height);
+	brC.setLocation(screen_width, screen_height);
+	lMap.addPoint(&tlC);
+	lMap.addPoint(&trC);
+	lMap.addPoint(&blC);
+	lMap.addPoint(&brC);
 }
 
 // Load screen
@@ -305,6 +315,12 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 		if (bClear->wasClicked()){
 			bHand->clear();
 			lMap.clear();
+
+			// Readd corners 
+			lMap.addPoint(&tlC);
+			lMap.addPoint(&trC);
+			lMap.addPoint(&blC);
+			lMap.addPoint(&brC);
 		}
 
 		// Check for show light
@@ -349,6 +365,8 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	// Draw map 
 	if (drawLight) 
 		mgl->enableLight(true);
+	mgl->setFlatColor(0.875f, 0.875f, 0.875f, 1.0f);
+	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, 0.0f,0.0f,screen_width, screen_height);
 	bHand->draw(mgl, (UIAtlas*)mAtlas);
 	mgl->enableLight(false);
 

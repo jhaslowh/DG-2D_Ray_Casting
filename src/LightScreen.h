@@ -9,6 +9,7 @@
 #include "UIValueSlider.h"
 #include "BoxHandler.h"
 #include "LightMap.h"
+#include "Point.h"
 
 // States
 #define LSTATE_MOVE 0
@@ -59,6 +60,9 @@ class LightScreen : public UIScreen
 	UICheckbox* cbShowLight;
 	UILabel* lLightSize;
 	UIValueSlider* vsLightSize;
+
+	// Corners
+	Point tlC, trC, blC, brC;
 
 public:
 	LightScreen();
