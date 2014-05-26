@@ -150,6 +150,7 @@ void LightMap::makeMap(){
 
 	// TODO check if inside any boxes 
 
+	// -----------------------
 	// Create Rays 
 	float angle;
 	Seg seg;
@@ -163,13 +164,15 @@ void LightMap::makeMap(){
 			lightX + (cos(angle) * lightRaySize),
 			lightY + (sin(angle) * lightRaySize));
 		seg.deletePoints = true;
+		seg.angle = angle;
 
 		// Add ray to list 
 		rays.push_back(seg);
 		seg.a = NULL;
 		seg.b = NULL;
 	}
-
+	
+	// -----------------------
 	// Clip Rays 
 	Point inter;
 	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++){
@@ -183,7 +186,16 @@ void LightMap::makeMap(){
 			}
 		}
 	}
-
+	
+	// -----------------------
+	// Sort arrays by angles
+	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++)
+		(*it).deletePoints = false;
+	rays.sort();
+	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++)
+		(*it).deletePoints = true;
+	
+	// -----------------------
 	// Make drawing triangles 
 	int count = (rays.size() + 1) * 2;		// Number of vertexes 
 	niCount = rays.size() * 3;	// Number of indicies 
@@ -208,20 +220,23 @@ void LightMap::makeMap(){
 
 	// Make index list 
 	nindicies = new GLshort[niCount];
-	int i2 = 0;
+	int i2 = 1;
 	for (int i = 0; i < niCount; i+=3){
-		if (i == niCount - 3){
+		if (i == 0){
 			nindicies[i] = 0;
-			nindicies[i+1] = rays.size();
-			nindicies[i+2] = 1;
+			nindicies[i+1] = 1;
+			nindicies[i+2] = rays.size();
 		}
 		else {
 			nindicies[i] = 0;
 			nindicies[i+1] = i2+1;
-			nindicies[i+2] = i2+2;
+			nindicies[i+2] = i2;
 			i2++;
 		}
 	}
+	/*for (int i = 0; i < niCount; i+=3){
+		std::cout << "(" << nindicies[i] << ", " << nindicies[i+1] << ", " << nindicies[i+2] << ")\n";
+	}*/
 
 	valid = true;
 }
