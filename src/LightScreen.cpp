@@ -125,7 +125,7 @@ void LightScreen::init(float screen_width, float screen_height){
 	vsLightSize = new UIValueSlider();
 	vsLightSize->setLocation(10.0f, 260.0f);
 	vsLightSize->setMinValue(0.0f);
-	vsLightSize->setMaxValue(1000.0f);
+	vsLightSize->setMaxValue(2000.0f);
 	vsLightSize->setValue(500.0f);
 	vsLightSize->setupHide(HT_HOROZONTAL, vsLightSize->getX() - 150.0f, .2f, true);
 	vsLightSize->setHidden();

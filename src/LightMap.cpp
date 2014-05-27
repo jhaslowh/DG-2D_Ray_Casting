@@ -144,7 +144,6 @@ void LightMap::clearDraw(){
 
 // Create new map 
 void LightMap::makeMap(){
-	std::cout << "---------------------\nUpdate map\n---------------------\n";
 	// Clear array list 
 	rays.clear();
 
@@ -152,9 +151,9 @@ void LightMap::makeMap(){
 
 	// -----------------------
 	// Create Rays 
-	float angle;
-	Seg seg;
-	Point inter;
+	float angle;	// Ray angle
+	Seg seg;		// Segment for use during algorithm
+	Point inter;	// Intersection point 
 	for (std::list<Point*>::iterator it = points.begin(); it != points.end(); it++){
 		// Get angle of ray 
 		angle = atan2((*it)->getY() - lightY, (*it)->getX() - lightX);
@@ -231,9 +230,6 @@ void LightMap::makeMap(){
 			i2++;
 		}
 	}
-	/*for (int i = 0; i < niCount; i+=3){
-		std::cout << "(" << nindicies[i] << ", " << nindicies[i+1] << ", " << nindicies[i+2] << ")\n";
-	}*/
 
 	valid = true;
 }
