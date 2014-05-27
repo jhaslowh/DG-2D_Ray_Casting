@@ -44,7 +44,8 @@ bool checkSegSeg(Point a, Point b, Point c, Point d, Point* p){
 	}
 
 	// Vertex collision 
-	//if (s == 0 || s == 1 || t == 1 || t == 0) 
+	if (s == 0 || s == 1 || t == 1 || t == 0) 
+		return false;
 	return true;
 }
 bool checkSegSeg(float a1, float a2, float b1, float b2, float c1, float c2, float d1, float d2){

@@ -154,6 +154,7 @@ void LightMap::makeMap(){
 	// Create Rays 
 	float angle;
 	Seg seg;
+	Point inter;
 	for (std::list<Point*>::iterator it = points.begin(); it != points.end(); it++){
 		// Get angle of ray 
 		angle = atan2((*it)->getY() - lightY, (*it)->getX() - lightX);
@@ -166,25 +167,21 @@ void LightMap::makeMap(){
 		seg.deletePoints = true;
 		seg.angle = angle;
 
+		// Clip Ray by checking intersection with walls that are not connected 
+		// to original point. 
+		for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
+			// Check if ray intercepts wall 
+			if ((*it2).a != (*it) && (*it2).b != (*it) && 
+				checkSegSeg(*(seg.a), *(seg.b), *((*it2).a), *((*it2).b), &inter)){
+				// Shrink Ray 
+				seg.b->setLocation(inter.getX(), inter.getY());
+			}
+		}
+
 		// Add ray to list 
 		rays.push_back(seg);
 		seg.a = NULL;
 		seg.b = NULL;
-	}
-	
-	// -----------------------
-	// Clip Rays 
-	Point inter;
-	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++){
-		for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
-			// Check if ray intercepts wall 
-			if (checkSegSeg(*((*it).a), *((*it).b), *((*it2).a), *((*it2).b), &inter)){
-				// Delete old point
-				delete (*it).b;
-				// Add interception as new end point 
-				(*it).b = new Point(inter.getX(), inter.getY());
-			}
-		}
 	}
 	
 	// -----------------------

@@ -1,6 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include <stdio.h>
+#include <iostream>
 #include <math.h>
 #include "Point.h"
 #include "Rec.h"
