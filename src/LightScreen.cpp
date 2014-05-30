@@ -72,7 +72,6 @@ void LightScreen::init(float screen_width, float screen_height){
 
 	this->screen_width = screen_width;
 	this->screen_height = screen_height;
-	float spacing = 5.0f;
 
 	// Create title 
 	lTitle = new UILabel(getStateString());

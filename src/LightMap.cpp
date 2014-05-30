@@ -140,7 +140,6 @@ void LightMap::makeMap(){
 	else {
 		// -----------------------
 		// Create Rays 
-		float angle;	// Ray angle
 		Seg seg;		// Segment for use during algorithm
 		Point inter;	// Intersection point 
 		float current = 0.0f;
