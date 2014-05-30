@@ -2,10 +2,13 @@
 #include <list>
 #include <math.h>
 #include "glew.h"
+
+#include "BoxHandler.h"
+#include "Collision.h"
 #include "GLHandler.h"
 #include "Seg.h"
-#include "SortPoint.h"
-#include "Collision.h"
+
+#define PI_2 6.283185f
 
 class LightMap
 {
@@ -13,9 +16,9 @@ class LightMap
 	float lightX, lightY;
 	float lightRaySize;
 	bool valid;
+	int rayCount;
 
 	// Lists
-	std::list<Point*> points;
 	std::list<Seg> segs;
 	std::list<Seg> rays;
 
@@ -32,6 +35,8 @@ class LightMap
 	bool clearDrawb;
 
 public:
+	BoxHandler* bHand;
+
 	LightMap();
 	~LightMap();
 
@@ -51,12 +56,6 @@ public:
 
 	// Draw map state
 	void drawMap(GLHandler* mgl);
-
-	// Add points
-	void addPoint(Point* p);
-
-	// Remove point from map
-	void removePoint(Point* p);
 
 	// Add segs
 	void addSeg(Seg seg);

@@ -135,10 +135,8 @@ void LightScreen::init(float screen_width, float screen_height){
 	trC.setLocation(screen_width, 0.0f);
 	blC.setLocation(0.0f, screen_height);
 	brC.setLocation(screen_width, screen_height);
-	lMap.addPoint(&tlC);
-	lMap.addPoint(&trC);
-	lMap.addPoint(&blC);
-	lMap.addPoint(&brC);
+
+	lMap.bHand = bHand;
 }
 
 // Load screen
@@ -315,12 +313,6 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 		if (bClear->wasClicked()){
 			bHand->clear();
 			lMap.clear();
-
-			// Readd corners 
-			lMap.addPoint(&tlC);
-			lMap.addPoint(&trC);
-			lMap.addPoint(&blC);
-			lMap.addPoint(&brC);
 		}
 
 		// Check for show light
@@ -451,12 +443,6 @@ void LightScreen::addBox(float x, float y, float width, float height){
 	Box* b = bHand->add(x,y,width,height);
 
 	if (b != NULL){
-		// Add corners 
-		lMap.addPoint(b->getCornerTopLeft());
-		lMap.addPoint(b->getCornerTopRight());
-		lMap.addPoint(b->getCornerBottomLeft());
-		lMap.addPoint(b->getCornerBottomRight());
-
 		// Add walls 
 		lMap.addSeg(Seg(b->getCornerTopLeft(), b->getCornerTopRight()));
 		lMap.addSeg(Seg(b->getCornerTopRight(), b->getCornerBottomRight()));
@@ -468,13 +454,6 @@ void LightScreen::addBox(float x, float y, float width, float height){
 // Remove box from list 
 void LightScreen::removeBox(Box* b){
 	if (b == NULL) return;
-
-	// Add corners 
-	lMap.removePoint(b->getCornerTopLeft());
-	lMap.removePoint(b->getCornerTopRight());
-	lMap.removePoint(b->getCornerBottomLeft());
-	lMap.removePoint(b->getCornerBottomRight());
-
 	// Add walls 
 	lMap.removeSeg(Seg(b->getCornerTopLeft(), b->getCornerTopRight()));
 	lMap.removeSeg(Seg(b->getCornerTopRight(), b->getCornerBottomRight()));

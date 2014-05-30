@@ -7,6 +7,7 @@ LightMap::LightMap()
 	lightRaySize = 500.0f;
 	valid = false;
 	clearDrawb = false;
+	rayCount = 180;
 
 	// Drawing properties 
 	lightArray = NULL;
@@ -15,6 +16,8 @@ LightMap::LightMap()
 	nindicies = NULL;
 	iCount = 0;
 	niCount = 0;
+
+	bHand = NULL;
 }
 
 LightMap::~LightMap(void)
@@ -92,24 +95,6 @@ void LightMap::drawMap(GLHandler* mgl){
 	}
 }
 
-// Add points
-void LightMap::addPoint(Point* p){
-	if (p == NULL){
-		std::cout << "ERROR: tried to add null point \n";
-	}
-	points.push_back(p);
-	valid = false;
-}
-
-// Remove point from map
-void LightMap::removePoint(Point* p){
-	if (p == NULL){
-		std::cout << "ERROR: tried to remove null point \n";
-	}
-	points.remove(p);
-	valid = false;
-}
-
 // Add segs
 void LightMap::addSeg(Seg seg){
 	segs.push_back(seg);
@@ -123,7 +108,6 @@ void LightMap::removeSeg(Seg seg){
 
 // Clear map
 void LightMap::clear(){
-	points.clear();
 	segs.clear();
 	clearDrawb = true;
 }
@@ -147,49 +131,49 @@ void LightMap::makeMap(){
 	// Clear array list 
 	rays.clear();
 
-	// TODO check if inside any boxes 
-
-	// -----------------------
-	// Create Rays 
-	float angle;	// Ray angle
-	Seg seg;		// Segment for use during algorithm
-	Point inter;	// Intersection point 
-	for (std::list<Point*>::iterator it = points.begin(); it != points.end(); it++){
-		// Get angle of ray 
-		angle = atan2((*it)->getY() - lightY, (*it)->getX() - lightX);
-		
-		// Make ray 
-		seg.a = new Point(lightX, lightY);
-		seg.b = new Point(
-			lightX + (cos(angle) * lightRaySize),
-			lightY + (sin(angle) * lightRaySize));
-		seg.deletePoints = true;
-		seg.angle = angle;
-
-		// Clip Ray by checking intersection with walls that are not connected 
-		// to original point. 
-		for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
-			// Check if ray intercepts wall 
-			if ((*it2).a != (*it) && (*it2).b != (*it) && 
-				checkSegSeg(*(seg.a), *(seg.b), *((*it2).a), *((*it2).b), &inter)){
-				// Shrink Ray 
-				seg.b->setLocation(inter.getX(), inter.getY());
-			}
-		}
-
-		// Add ray to list 
-		rays.push_back(seg);
-		seg.a = NULL;
-		seg.b = NULL;
+	// Check if inside any boxes 
+	if (bHand != NULL && bHand->contains(lightX, lightY)){
+		//valid = true;
+		std::cout << "ERROR: Light point in wall\n";
+		//return;
 	}
-	
-	// -----------------------
-	// Sort arrays by angles
-	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++)
-		(*it).deletePoints = false;
-	rays.sort();
-	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++)
-		(*it).deletePoints = true;
+	else {
+		// -----------------------
+		// Create Rays 
+		float angle;	// Ray angle
+		Seg seg;		// Segment for use during algorithm
+		Point inter;	// Intersection point 
+		float current = 0.0f;
+		float spacing = PI_2 / (float)rayCount;
+
+		// Add rays at interval 
+		for (int i = 0; i < rayCount; i++){
+			// Make ray 
+			seg.a = new Point(lightX, lightY);
+			seg.b = new Point(
+				lightX + (cos(current) * lightRaySize),
+				lightY + (sin(current) * lightRaySize));
+			seg.deletePoints = true;
+			seg.angle = current;
+			
+			// Clip Ray by checking intersection with walls 
+			for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
+				// Check if ray intercepts wall 
+				if (checkSegSeg(*(seg.a), *(seg.b), *((*it2).a), *((*it2).b), &inter)){
+					// Shrink Ray 
+					seg.b->setLocation(inter.getX(), inter.getY());
+				}
+			}
+		
+			// Add ray to list 
+			rays.push_back(seg);
+			seg.a = NULL;
+			seg.b = NULL;
+
+			// Move up angle 
+			current += spacing;
+		}
+	}
 	
 	// -----------------------
 	// Make drawing triangles 
