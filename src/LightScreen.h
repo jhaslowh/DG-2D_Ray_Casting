@@ -16,14 +16,15 @@
 #define LSTATE_ADD 1
 #define LSTATE_REMOVE 2
 #define LSTATE_SETLIGHT 3
+#define LSTATE_CHANGE_LIGHT_SIZE 4
 
 // Move object states 
-#define SMOVE_START 4
-#define SMOVE_BOX 5
+#define SMOVE_START 5
+#define SMOVE_BOX 6
 
 // Adding sub states
-#define SADD_START 6
-#define SADD_DRAG 7
+#define SADD_START 7
+#define SADD_DRAG 8
 
 class LightScreen : public UIScreen
 {

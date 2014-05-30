@@ -323,6 +323,10 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 		vsLightSize->updateInput(mKeyH, mMouseH);
 		if (abs(vsLightSize->getValue() - lMap.getLightSize()) > 0.000001f){
 			lMap.setLightSize(vsLightSize->getValue());
+			if (state != LSTATE_CHANGE_LIGHT_SIZE){
+				state = LSTATE_CHANGE_LIGHT_SIZE;
+				lTitle->setText(getStateString());
+			}
 		}
 
 		// Check for hide screen
@@ -521,6 +525,8 @@ std::string LightScreen::getStateString(){
 		return std::string("State: Remove Object");
 	case LSTATE_SETLIGHT:
 		return std::string("State: Move Light");
+	case LSTATE_CHANGE_LIGHT_SIZE:
+		return std::string("State: Change light size");
 	default:
 		return std::string("");
 	}
