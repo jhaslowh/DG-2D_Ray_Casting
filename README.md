@@ -37,7 +37,7 @@ Used to load texture files
 Linux Errors
 ------------------------
 
-**Error: **Finding OpenGL headers  
+**Error:**Finding OpenGL headers  
 You will need to get the OpenGL headers if you are compiling the code on linux. You can either look for there here..  
 
 [http://www.opengl.org/registry/](http://www.opengl.org/registry/)  
@@ -48,7 +48,7 @@ or run these commands. The freeglut library might not be nessesary.
     sudo apt-get update  
     sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev  
 
-**Error: ** ./2DLight: error while loading shared libraries: libSDL2-2.0.so.0: cannot open shared object file: No such file or directory
+**Error:** ./2DLight: error while loading shared libraries: libSDL2-2.0.so.0: cannot open shared object file: No such file or directory
 
 Open the file 
 
@@ -56,7 +56,7 @@ Open the file
 
 Add the following line the the bottom  
 
-    /usr/local/lib
+    include /usr/local/lib
 
 Then run the following command  
 
