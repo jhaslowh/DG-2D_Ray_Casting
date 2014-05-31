@@ -46,3 +46,43 @@ or run these commands. The freeglut library might not be nessesary.
 
     sudo apt-get update  
     sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev  
+
+Building on Linux
+-----------------
+
+SDL2, GLEW, and SOIL are required to compile. If you do not have any of these libraries, follow the instructions below to install.  
+
+**SDL 2**  
+Download SDL2-2.0.3.tar.gz from here [http://www.libsdl.org/download-2.0.php](http://www.libsdl.org/download-2.0.php)  
+Then run the following commands   
+
+    tar -zxvf SDL2-2.0.3.tar.gz
+    cd SDL-1.2.7
+    ./configure
+    make
+    sudo make install
+
+**GLEW**
+Download glew-1.10.0.tgz from here [http://glew.sourceforge.net/](http://glew.sourceforge.net/)  
+Then run the following commands  
+
+    tar -zxvf glew-1.10.0.tgz
+    cd glew-1.10.0
+    make
+    sudo make install
+
+If you get the following errors when trying to install this package, then do the following.  
+
+    sudo apt-get install libxmu-dev
+    sudo apt-get install libxi-dev
+
+**SOIL**  
+Download soil.zip from here [http://www.lonesock.net/soil.html](http://www.lonesock.net/soil.html)  
+Then run the following commands  
+
+    unzip soil.zip
+    cd Simple\ OpenGL\ Image\ Library/projects/makefile/
+    mkdir obj
+    make 
+    sudo make install
+
