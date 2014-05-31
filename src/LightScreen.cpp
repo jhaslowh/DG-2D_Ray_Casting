@@ -119,7 +119,6 @@ void LightScreen::init(float screen_width, float screen_height){
 	lLightSize->setTextSize(16.0f);
 	lLightSize->setColor(.8f,.8f,.8f,1.0f);
 	lLightSize->setupHide(HT_HOROZONTAL,lLightSize->getX()-150.0f,.2f,true);
-	lLightSize->setHidden();
 	// Create light size value slider
 	vsLightSize = new UIValueSlider();
 	vsLightSize->setLocation(10.0f, 260.0f);
@@ -127,7 +126,24 @@ void LightScreen::init(float screen_width, float screen_height){
 	vsLightSize->setMaxValue(2000.0f);
 	vsLightSize->setValue(500.0f);
 	vsLightSize->setupHide(HT_HOROZONTAL, vsLightSize->getX() - 150.0f, .2f, true);
+	// Create ray count label 
+	lRayCount = new UILabel(std::string("Ray Count: 180"));
+	lRayCount->setLocation(vsLightSize->getX() + 4.0f, vsLightSize->getY() + 30.0f);
+	lRayCount->setTextSize(16.0f);
+	lRayCount->setColor(.8f,.8f,.8f,1.0f);
+	lRayCount->setupHide(HT_HOROZONTAL,lRayCount->getX()-150.0f,.2f,true);
+	// Create ray count value slider 
+	vsRayCount = new UIValueSlider();
+	vsRayCount->setLocation(lRayCount->getX() - 4.0f, lRayCount->getY() + 20.0f);
+	vsRayCount->setMinValue(5.0f);
+	vsRayCount->setMaxValue(300.0f);
+	vsRayCount->setValue(180.0f);
+	vsRayCount->setupHide(HT_HOROZONTAL, vsRayCount->getX() - 150.0f, .2f, true);
+	
+	lLightSize->setHidden();
 	vsLightSize->setHidden();
+	lRayCount->setHidden();
+	vsRayCount->setHidden();
 
 	// Add corners
 	tlC.setLocation(0.0f,0.0f);
@@ -177,6 +193,8 @@ void LightScreen::update(float deltaTime){
 	cbShowLight->update(deltaTime);
 	lLightSize->update(deltaTime);
 	vsLightSize->update(deltaTime);
+	lRayCount->update(deltaTime);
+	vsRayCount->update(deltaTime);
 
 	lMap.update(deltaTime);
 }
@@ -328,6 +346,17 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 			}
 		}
 
+		// Update ray count
+		vsRayCount->updateInput(mKeyH, mMouseH);
+		if (abs((int)vsRayCount->getValue() - lMap.getRayCount()) > 0.00001f){
+			lMap.setRayCount((int)vsRayCount->getValue());
+			lRayCount->setText(std::string("Ray Count: ") + toString(lMap.getRayCount()));
+			if (state != LSTATE_CHANGE_LIGHT_SIZE){
+				state = LSTATE_CHANGE_LIGHT_SIZE;
+				lTitle->setText(getStateString());
+			}
+		}
+
 		// Check for hide screen
 		bHide->updateInput(mKeyH, mMouseH);
 		if (bHide->wasClicked()) hide();
@@ -352,19 +381,22 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 		lMap.drawMap(mgl);
 		mgl->lightEnd();
 	}
-
+	
 	// Bind UI Matrix's
 	mAtlas->bindBuffers(mgl);
 	mAtlas->bindTexture(mgl);
 
-	// Draw map 
+	// Enable light 
 	if (drawLight) 
 		mgl->enableLight(true);
+
 	mgl->setFlatColor(0.875f, 0.875f, 0.875f, 1.0f);
 	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, 0.0f,0.0f,screen_width, screen_height);
+	// Draw boxes 
 	bHand->draw(mgl, (UIAtlas*)mAtlas);
 	mgl->enableLight(false);
 
+	// State specific things 
 	drawState(mgl, (UIAtlas*)mAtlas);
 
 	// Draw UI 
@@ -385,6 +417,8 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	cbShowLight->draw(mgl, (UIAtlas*)mAtlas);
 	lLightSize->draw(mgl, (UIAtlas*)mAtlas);
 	vsLightSize->draw(mgl, (UIAtlas*)mAtlas);
+	lRayCount->draw(mgl, (UIAtlas*)mAtlas);
+	vsRayCount->draw(mgl, (UIAtlas*)mAtlas);
 }
 
 // Draw state 
@@ -412,6 +446,8 @@ void LightScreen::hide(){
 	lLightSize->hide();
 	vsLightSize->hide();
 	bSetLight->hide();
+	lRayCount->hide();
+	vsRayCount->hide();
 	screenShown = false;
 }
 
@@ -432,6 +468,8 @@ void LightScreen::show(){
 	lLightSize->show();
 	vsLightSize->show();
 	bSetLight->show();
+	lRayCount->show();
+	vsRayCount->show();
 	screenShown = true;
 }
 
@@ -444,6 +482,7 @@ void LightScreen::addBox(float x, float y, float width, float height){
 
 	// add box 
 	Box* b = bHand->add(x,y,width,height);
+	b->setColor(.738f, .535f,.32f,1.0f);
 
 	if (b != NULL){
 		// Add walls 
@@ -526,6 +565,8 @@ std::string LightScreen::getStateString(){
 		return std::string("State: Move Light");
 	case LSTATE_CHANGE_LIGHT_SIZE:
 		return std::string("State: Change light size");
+	case LSTATE_CHANGE_RAY_COUNT:
+		return std::string("State: Change ray count");
 	default:
 		return std::string("");
 	}

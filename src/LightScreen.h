@@ -17,14 +17,15 @@
 #define LSTATE_REMOVE 2
 #define LSTATE_SETLIGHT 3
 #define LSTATE_CHANGE_LIGHT_SIZE 4
+#define LSTATE_CHANGE_RAY_COUNT 5
 
 // Move object states 
-#define SMOVE_START 5
-#define SMOVE_BOX 6
+#define SMOVE_START 6
+#define SMOVE_BOX 7
 
 // Adding sub states
-#define SADD_START 7
-#define SADD_DRAG 8
+#define SADD_START 8
+#define SADD_DRAG 9
 
 class LightScreen : public UIScreen
 {
@@ -61,6 +62,8 @@ class LightScreen : public UIScreen
 	UICheckbox* cbShowLight;
 	UILabel* lLightSize;
 	UIValueSlider* vsLightSize;
+	UILabel* lRayCount;
+	UIValueSlider* vsRayCount;
 
 	// Corners
 	Point tlC, trC, blC, brC;

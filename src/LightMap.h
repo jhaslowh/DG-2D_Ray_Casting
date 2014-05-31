@@ -48,6 +48,11 @@ public:
 	// Get the size of the rays
 	float getLightSize();
 
+	// Set the ray count
+	void setRayCount(int count);
+	// Get the ray count
+	int getRayCount();
+
 	// Invalidate map
 	void invalidate();
 

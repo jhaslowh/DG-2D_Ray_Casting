@@ -49,6 +49,14 @@ float LightMap::getLightSize(){
 	return lightRaySize;
 }
 
+// Set the ray count
+void LightMap::setRayCount(int count){
+	rayCount = count;
+	valid = false;
+}
+// Get the ray count
+int LightMap::getRayCount(){return rayCount;}
+
 // Invalidate map
 void LightMap::invalidate(){
 	valid = false;
