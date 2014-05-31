@@ -62,7 +62,7 @@ Then run the following commands
     make
     sudo make install
 
-**GLEW**
+**GLEW**  
 Download glew-1.10.0.tgz from here [http://glew.sourceforge.net/](http://glew.sourceforge.net/)  
 Then run the following commands  
 
