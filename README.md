@@ -10,8 +10,17 @@ OpenGL 3.0 or greater is required to run.
 To compile on windows, run the project with Visual Studio 2010 or greater and build it.  
 
 **Linux**  
-To compile on linux, navigate to the src folding and run make. The build will be in the build folder and will be named "2DLight".  
-If you get errors while building on linux, check the error section below. 
+To compile (starting in the root project directory)  
+    
+    cd src
+    make
+
+To run (starting in the root project directory)  
+
+    cd src/build/
+    ./2DLight
+
+If you get errors while building or running on linux, check the error section below. 
 
 ### Libraries
 
@@ -37,7 +46,7 @@ Used to load texture files
 Linux Errors
 ------------------------
 
-**Error:** OpenGL headers cannot be found 
+**Error:** OpenGL headers cannot be found  
 If you are getting OpenGL errors, run the following commands  
 
     sudo apt-get update  
@@ -58,7 +67,7 @@ Then run the following command
 
     sudo /sbin/ldconfig
 
-Building on Linux
+Installing Libraries 
 -----------------
 
 SDL2, GLEW, and SOIL are required to compile. If you do not have any of these libraries, follow the instructions below to install them.  
