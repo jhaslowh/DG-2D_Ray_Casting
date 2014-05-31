@@ -17,6 +17,7 @@ LightScreen::LightScreen() : UIScreen()
 
 	// Create box handler
 	bHand = new BoxHandler(100);
+	lightDarkness = 1.0f;
 
 	// Move state variables 
 	moveBox = NULL;
@@ -36,6 +37,10 @@ LightScreen::LightScreen() : UIScreen()
 	cbShowLight = NULL;
 	lLightSize = NULL;
 	vsLightSize = NULL;
+	lRayCount = NULL;
+	vsRayCount = NULL;
+	lDarkness = NULL;
+	vsDarkness = NULL;
 }
 
 LightScreen::~LightScreen()
@@ -64,6 +69,15 @@ LightScreen::~LightScreen()
 	lLightSize = NULL;
 	delete vsLightSize;
 	vsLightSize = NULL;
+	delete lRayCount;
+	lRayCount = NULL;
+	delete vsRayCount;
+	vsRayCount = NULL;
+	delete lDarkness;
+	lDarkness = NULL;
+	delete vsDarkness;
+	vsDarkness = NULL;
+
 }
 	
 // Initialize screen
@@ -139,11 +153,26 @@ void LightScreen::init(float screen_width, float screen_height){
 	vsRayCount->setMaxValue(300.0f);
 	vsRayCount->setValue(180.0f);
 	vsRayCount->setupHide(HT_HOROZONTAL, vsRayCount->getX() - 150.0f, .2f, true);
+	// Create darkness label 
+	lDarkness = new UILabel(std::string("Darkness"));
+	lDarkness->setLocation(vsRayCount->getX() + 4.0f, vsRayCount->getY() + 30.0f);
+	lDarkness->setTextSize(16.0f);
+	lDarkness->setColor(.8f,.8f,.8f,1.0f);
+	lDarkness->setupHide(HT_HOROZONTAL,lDarkness->getX()-150.0f,.2f,true);
+	// Create darkness value slider 
+	vsDarkness = new UIValueSlider();
+	vsDarkness->setLocation(lDarkness->getX() - 4.0f, lDarkness->getY() + 20.0f);
+	vsDarkness->setMinValue(0.0f);
+	vsDarkness->setMaxValue(1.0f);
+	vsDarkness->setValue(180.0f);
+	vsDarkness->setupHide(HT_HOROZONTAL, vsDarkness->getX() - 150.0f, .2f, true);
 	
 	lLightSize->setHidden();
 	vsLightSize->setHidden();
 	lRayCount->setHidden();
 	vsRayCount->setHidden();
+	lDarkness->setHidden();
+	vsDarkness->setHidden();
 
 	// Add corners
 	tlC.setLocation(0.0f,0.0f);
@@ -195,6 +224,8 @@ void LightScreen::update(float deltaTime){
 	vsLightSize->update(deltaTime);
 	lRayCount->update(deltaTime);
 	vsRayCount->update(deltaTime);
+	lDarkness->update(deltaTime);
+	vsDarkness->update(deltaTime);
 
 	lMap.update(deltaTime);
 }
@@ -348,11 +379,21 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 
 		// Update ray count
 		vsRayCount->updateInput(mKeyH, mMouseH);
-		if (abs((int)vsRayCount->getValue() - lMap.getRayCount()) > 0.00001f){
+		if (abs((int)vsRayCount->getValue() - lMap.getRayCount()) > 0.000001f){
 			lMap.setRayCount((int)vsRayCount->getValue());
 			lRayCount->setText(std::string("Ray Count: ") + toString(lMap.getRayCount()));
 			if (state != LSTATE_CHANGE_LIGHT_SIZE){
 				state = LSTATE_CHANGE_LIGHT_SIZE;
+				lTitle->setText(getStateString());
+			}
+		}
+
+		// Update darkness 
+		vsDarkness->updateInput(mKeyH, mMouseH);
+		if (abs(vsDarkness->getValue() - lightDarkness) > 0.000001f){
+			lightDarkness = vsDarkness->getValue();
+			if (state != LSTATE_DARKNESS){
+				state = LSTATE_DARKNESS;
 				lTitle->setText(getStateString());
 			}
 		}
@@ -377,7 +418,8 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 
 	// Draw lights
 	if (drawLight){
-		mgl->lightBegin(0.0f,0.0f,0.0f);
+		float value = .5f * (1.0f - lightDarkness);
+		mgl->lightBegin(value,value,value);
 		lMap.drawMap(mgl);
 		mgl->lightEnd();
 	}
@@ -419,6 +461,8 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	vsLightSize->draw(mgl, (UIAtlas*)mAtlas);
 	lRayCount->draw(mgl, (UIAtlas*)mAtlas);
 	vsRayCount->draw(mgl, (UIAtlas*)mAtlas);
+	lDarkness->draw(mgl, (UIAtlas*)mAtlas);
+	vsDarkness->draw(mgl, (UIAtlas*)mAtlas);
 }
 
 // Draw state 
@@ -448,6 +492,8 @@ void LightScreen::hide(){
 	bSetLight->hide();
 	lRayCount->hide();
 	vsRayCount->hide();
+	lDarkness->hide();
+	vsDarkness->hide();
 	screenShown = false;
 }
 
@@ -470,6 +516,8 @@ void LightScreen::show(){
 	bSetLight->show();
 	lRayCount->show();
 	vsRayCount->show();
+	lDarkness->show();
+	vsDarkness->show();
 	screenShown = true;
 }
 
@@ -567,6 +615,8 @@ std::string LightScreen::getStateString(){
 		return std::string("State: Change light size");
 	case LSTATE_CHANGE_RAY_COUNT:
 		return std::string("State: Change ray count");
+	case LSTATE_DARKNESS:
+		return std::string("State: Change darkness value");
 	default:
 		return std::string("");
 	}

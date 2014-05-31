@@ -18,14 +18,15 @@
 #define LSTATE_SETLIGHT 3
 #define LSTATE_CHANGE_LIGHT_SIZE 4
 #define LSTATE_CHANGE_RAY_COUNT 5
+#define LSTATE_DARKNESS 6
 
 // Move object states 
-#define SMOVE_START 6
-#define SMOVE_BOX 7
+#define SMOVE_START 7
+#define SMOVE_BOX 8
 
 // Adding sub states
-#define SADD_START 8
-#define SADD_DRAG 9
+#define SADD_START 9
+#define SADD_DRAG 10
 
 class LightScreen : public UIScreen
 {
@@ -45,6 +46,7 @@ class LightScreen : public UIScreen
 	// Elements
 	BoxHandler* bHand;
 	LightMap lMap;
+	float lightDarkness;
 
 	// state variables 
 	Box* moveBox;		// Box being moved 
@@ -64,6 +66,8 @@ class LightScreen : public UIScreen
 	UIValueSlider* vsLightSize;
 	UILabel* lRayCount;
 	UIValueSlider* vsRayCount;
+	UILabel* lDarkness;
+	UIValueSlider* vsDarkness;
 
 	// Corners
 	Point tlC, trC, blC, brC;
