@@ -37,7 +37,7 @@ Used to load texture files
 Linux Errors
 ------------------------
 
-**Error:**Finding OpenGL headers  
+**Error:** Finding OpenGL headers  
 You will need to get the OpenGL headers if you are compiling the code on linux. You can either look for there here..  
 
 [http://www.opengl.org/registry/](http://www.opengl.org/registry/)  
