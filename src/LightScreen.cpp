@@ -259,8 +259,7 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 			}
 			else if (subState == SMOVE_BOX){
 				// Check for release 
-				if (!mMouseH->isLeftDown() && mMouseH->wasLeftDown())
-				{
+				if (!mMouseH->isLeftDown()){
 					moveBox = NULL;
 					subState = SMOVE_START;
 					lTitle->setText(getStateString());
@@ -281,15 +280,15 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 				
 				// Move if valid 
 				if (validMove){
-					moveBox->setLocation(
-						moveBox->getX() + x2,
-						moveBox->getY() + y2);
+					moveBox->setLocation(moveBox->getX() + x2, moveBox->getY() + y2);
 					lMap.invalidate();
 				}
 
 				// Set old location 
 				x1 = clampX(mMouseH->getX());
 				y1 = clampY(mMouseH->getY());
+
+				return;
 			}
 		}
 		// Update add state 
