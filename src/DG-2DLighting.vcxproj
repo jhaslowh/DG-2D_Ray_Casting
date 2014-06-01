@@ -95,6 +95,7 @@
     <ClInclude Include="Point.h" />
     <ClInclude Include="Rec.h" />
     <ClInclude Include="Seg.h" />
+    <ClInclude Include="Seg2.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextRender.h" />
     <ClInclude Include="TextureAtlas.h" />
@@ -125,6 +126,7 @@
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Rec.cpp" />
     <ClCompile Include="Seg.cpp" />
+    <ClCompile Include="Seg2.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextRender.cpp" />
     <ClCompile Include="TextureAtlas.cpp" />

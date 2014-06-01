@@ -148,38 +148,104 @@ void LightMap::makeMap(){
 	else {
 		// -----------------------
 		// Create Rays 
-		Seg seg;		// Segment for use during algorithm
+		Seg2 seg;		// Segment for use during algorithm
 		Point inter;	// Intersection point 
-		float current = 0.0f;
-		float spacing = PI_2 / (float)rayCount;
+		float current = -PI;	// Current angle for ray to add
+		float angle = 0.0f;		// Angle used during wall segment ray adds 
+		float spacing = PI_2 / (float)rayCount; // Angular spacing between rays 
+		std::list<Seg> walls;
+		Seg* wall = NULL;
 
 		// Add rays at interval 
 		for (int i = 0; i < rayCount; i++){
 			// Make ray 
-			seg.a = new Point(lightX, lightY);
-			seg.b = new Point(
+			seg.a.setLocation(lightX, lightY);
+			seg.b.setLocation(
 				lightX + (cos(current) * lightRaySize),
 				lightY + (sin(current) * lightRaySize));
-			seg.deletePoints = true;
 			seg.angle = current;
-			
+
 			// Clip Ray by checking intersection with walls 
 			for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
 				// Check if ray intercepts wall 
-				if (checkSegSeg(*(seg.a), *(seg.b), *((*it2).a), *((*it2).b), &inter)){
+				if (checkSegSeg((seg.a), (seg.b), *((*it2).a), *((*it2).b), &inter)){
 					// Shrink Ray 
-					seg.b->setLocation(inter.getX(), inter.getY());
+					seg.b.setLocation(inter.getX(), inter.getY());
+
+					wall = &(*it2);
 				}
+			}
+
+			// Add wall to list 
+			if (wall != NULL){
+				bool wallfound = false;
+				for (std::list<Seg>::iterator it = walls.begin(); it != walls.end(); it++){
+					if (*wall == *it)
+						wallfound = true;
+				}
+
+				if (!wallfound)
+					walls.push_back(*wall);
+				wall = NULL;
 			}
 		
 			// Add ray to list 
 			rays.push_back(seg);
-			seg.a = NULL;
-			seg.b = NULL;
 
 			// Move up angle 
 			current += spacing;
 		}
+
+		// Add wall segs
+		for (std::list<Seg>::iterator it = walls.begin(); it != walls.end(); it++){
+			// Check distance 
+			if (dist(lightX, lightY, (*it).a->getX(), (*it).a->getY()) < lightRaySize){
+				// Add point a 
+				angle = atan2((*it).a->getY() - lightY, (*it).a->getX() - lightX);
+				// Make ray 
+				seg.a.setLocation(lightX, lightY);
+				seg.b.setLocation((*it).a->getX(),(*it).a->getY());
+				seg.angle = angle;
+
+				// Clip Ray by checking intersection with walls 
+				for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
+					// Check if ray intercepts wall 
+					if (checkSegSeg((seg.a), (seg.b), *((*it2).a), *((*it2).b), &inter)){
+						// Shrink Ray 
+						seg.b.setLocation(inter.getX(), inter.getY());
+					}
+				}
+
+				// Add ray to list 
+				rays.push_back(seg);
+			}
+
+			// Check distance 
+			if (dist(lightX, lightY, (*it).b->getX(), (*it).b->getY()) < lightRaySize){
+				// Add point b 
+				angle = atan2((*it).b->getY() - lightY, (*it).b->getX() - lightX);
+				// Make ray 
+				seg.a.setLocation(lightX, lightY);
+				seg.b.setLocation((*it).b->getX(),(*it).b->getY());
+				seg.angle = angle;
+
+				
+				// Clip Ray by checking intersection with walls 
+				for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
+					// Check if ray intercepts wall 
+					if (checkSegSeg((seg.a), (seg.b), *((*it2).a), *((*it2).b), &inter)){
+						// Shrink Ray 
+						seg.b.setLocation(inter.getX(), inter.getY());
+					}
+				}
+
+				// Add ray to list 
+				rays.push_back(seg);
+			}
+		}
+
+		// Sort arrays by angles
+		rays.sort();
 	}
 	
 	// -----------------------
@@ -198,10 +264,10 @@ void LightMap::makeMap(){
 	nlightArray[0] = lightX;
 	nlightArray[1] = lightY;
 	int index = 2;
-	for (std::list<Seg>::iterator it = rays.begin(); it != rays.end(); it++){
-		nlightArray[index] = (*it).b->getX();
+	for (std::list<Seg2>::iterator it = rays.begin(); it != rays.end(); it++){
+		nlightArray[index] = (*it).b.getX();
 		index++;
-		nlightArray[index] = (*it).b->getY();
+		nlightArray[index] = (*it).b.getY();
 		index++;
 	}
 

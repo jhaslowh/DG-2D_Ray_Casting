@@ -129,6 +129,9 @@
     <ClInclude Include="Seg.h">
       <Filter>Header Files\phys</Filter>
     </ClInclude>
+    <ClInclude Include="Seg2.h">
+      <Filter>Header Files\phys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -213,6 +216,9 @@
       <Filter>Source Files\gfx</Filter>
     </ClCompile>
     <ClCompile Include="Seg.cpp">
+      <Filter>Source Files\phys</Filter>
+    </ClCompile>
+    <ClCompile Include="Seg2.cpp">
       <Filter>Source Files\phys</Filter>
     </ClCompile>
   </ItemGroup>

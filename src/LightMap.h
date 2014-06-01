@@ -7,8 +7,11 @@
 #include "Collision.h"
 #include "GLHandler.h"
 #include "Seg.h"
+#include "Seg2.h"
+#include "UIAtlas.h"
 
 #define PI_2 6.283185f
+#define PI 3.1415926f
 
 class LightMap
 {
@@ -20,7 +23,7 @@ class LightMap
 
 	// Lists
 	std::list<Seg> segs;
-	std::list<Seg> rays;
+	std::list<Seg2> rays;
 
 	// Drawing properties 
 	int iCount;

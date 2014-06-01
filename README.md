@@ -1,4 +1,4 @@
-DG 2D Lighting 
+DG 2D Ray Tracing
 ==============
 
 Building / Running
