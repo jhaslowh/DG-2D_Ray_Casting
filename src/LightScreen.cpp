@@ -179,6 +179,10 @@ void LightScreen::init(float screen_width, float screen_height){
 	trC.setLocation(screen_width, 0.0f);
 	blC.setLocation(0.0f, screen_height);
 	brC.setLocation(screen_width, screen_height);
+	lMap.addPoint(&tlC);
+	lMap.addPoint(&trC);
+	lMap.addPoint(&blC);
+	lMap.addPoint(&brC);
 
 	lMap.bHand = bHand;
 }
@@ -360,6 +364,12 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 		if (bClear->wasClicked()){
 			bHand->clear();
 			lMap.clear();
+
+			// Readd corners 
+			lMap.addPoint(&tlC);
+			lMap.addPoint(&trC);
+			lMap.addPoint(&blC);
+			lMap.addPoint(&brC);
 		}
 
 		// Check for show light
@@ -445,6 +455,7 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, 0.0f,0.0f,menuWidth+1.0f, screen_height);
 	mgl->setFlatColor(.19f,.2f,.2f,bMove->getOpacity());
 	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, 0.0f,0.0f,menuWidth, screen_height);
+	lMap.drawDebug(mgl, (UIAtlas*)mAtlas);
 
 	// Draw buttons
 	lTitle->draw(mgl, (UIAtlas*)mAtlas);
@@ -532,6 +543,12 @@ void LightScreen::addBox(float x, float y, float width, float height){
 	b->setColor(.738f, .535f,.32f,1.0f);
 
 	if (b != NULL){
+		// Add corners 
+		lMap.addPoint(b->getCornerTopLeft());
+		lMap.addPoint(b->getCornerTopRight());
+		lMap.addPoint(b->getCornerBottomLeft());
+		lMap.addPoint(b->getCornerBottomRight());
+
 		// Add walls 
 		lMap.addSeg(Seg(b->getCornerTopLeft(), b->getCornerTopRight()));
 		lMap.addSeg(Seg(b->getCornerTopRight(), b->getCornerBottomRight()));
@@ -543,7 +560,13 @@ void LightScreen::addBox(float x, float y, float width, float height){
 // Remove box from list 
 void LightScreen::removeBox(Box* b){
 	if (b == NULL) return;
-	// Add walls 
+	// Remove corners 
+	lMap.removePoint(b->getCornerTopLeft());
+	lMap.removePoint(b->getCornerTopRight());
+	lMap.removePoint(b->getCornerBottomLeft());
+	lMap.removePoint(b->getCornerBottomRight());
+
+	// Remove walls 
 	lMap.removeSeg(Seg(b->getCornerTopLeft(), b->getCornerTopRight()));
 	lMap.removeSeg(Seg(b->getCornerTopRight(), b->getCornerBottomRight()));
 	lMap.removeSeg(Seg(b->getCornerBottomRight(), b->getCornerBottomLeft()));

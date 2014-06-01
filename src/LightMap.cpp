@@ -65,7 +65,7 @@ void LightMap::invalidate(){
 // Update map state
 void LightMap::update(float deltaTime){
 	if (!valid){
-		makeMap();
+		makeMap2();
 	}
 }
 
@@ -103,6 +103,15 @@ void LightMap::drawMap(GLHandler* mgl){
 	}
 }
 
+// Draw debug
+void LightMap::drawDebug(GLHandler* mgl, UIAtlas* mUI){
+	/*mgl->setFlatColor(1.0f, 0.0f, 0.0f, 1.0f);
+
+	for (std::list<Point>::iterator it = rayEnds.begin(); it != rayEnds.end(); it++){
+		mUI->drawScale2(mgl, UII_REC, (*it).getX() - 1.0f, (*it).getY(), 2.0f, 2.0f);
+	}*/
+}
+
 // Add segs
 void LightMap::addSeg(Seg seg){
 	segs.push_back(seg);
@@ -114,8 +123,27 @@ void LightMap::removeSeg(Seg seg){
 	segs.remove(seg);
 }
 
+// Add points
+void LightMap::addPoint(Point* p){
+	if (p == NULL){
+		std::cout << "ERROR: tried to add null point \n";
+	}
+	points.push_back(p);
+	valid = false;
+}
+
+// Remove point from map
+void LightMap::removePoint(Point* p){
+	if (p == NULL){
+		std::cout << "ERROR: tried to remove null point \n";
+	}
+	points.remove(p);
+	valid = false;
+}
+
 // Clear map
 void LightMap::clear(){
+	points.clear();
 	segs.clear();
 	clearDrawb = true;
 }
@@ -138,12 +166,11 @@ void LightMap::clearDraw(){
 void LightMap::makeMap(){
 	// Clear array list 
 	rays.clear();
+	rayEnds.clear();
 
 	// Check if inside any boxes 
 	if (bHand != NULL && bHand->contains(lightX, lightY)){
-		//valid = true;
 		std::cout << "ERROR: Light point in wall\n";
-		//return;
 	}
 	else {
 		// -----------------------
@@ -265,6 +292,7 @@ void LightMap::makeMap(){
 	nlightArray[1] = lightY;
 	int index = 2;
 	for (std::list<Seg2>::iterator it = rays.begin(); it != rays.end(); it++){
+		rayEnds.push_back(Point((*it).b.getX(), (*it).b.getY()));
 		nlightArray[index] = (*it).b.getX();
 		index++;
 		nlightArray[index] = (*it).b.getY();
@@ -287,6 +315,99 @@ void LightMap::makeMap(){
 			i2++;
 		}
 	}
+
+	valid = true;
+}
+
+// Create new map wtih method 2
+void LightMap::makeMap2(){
+	// Clear array list 
+	rays.clear();
+	rayEnds.clear();
+
+	// Check if inside any boxes 
+	if (bHand != NULL && bHand->contains(lightX, lightY)){
+		std::cout << "ERROR: Light point in wall\n";
+	}
+	else{
+		// -----------------------
+		// Create Rays 
+		float angle;
+		Seg2 seg;
+		for (std::list<Point*>::iterator it = points.begin(); it != points.end(); it++){
+			// Get angle of ray 
+			angle = atan2((*it)->getY() - lightY, (*it)->getX() - lightX);
+
+			// Make ray 
+			seg.a.setLocation(lightX, lightY);
+			seg.b.setLocation(
+				lightX + (cos(angle) * lightRaySize),
+				lightY + (sin(angle) * lightRaySize));
+			seg.angle = angle;
+
+			// Add ray to list 
+			rays.push_back(seg);
+		}
+	
+		// -----------------------
+		// Clip Rays 
+		Point inter;
+		for (std::list<Seg2>::iterator it = rays.begin(); it != rays.end(); it++){
+			for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
+				// Check if ray intercepts wall 
+				if (checkSegSeg(((*it).a), ((*it).b), *((*it2).a), *((*it2).b), &inter)){
+					// Add interception as new end point 
+					(*it).b.setLocation(inter.getX(), inter.getY());
+				}
+			}
+		}
+
+		// -----------------------
+		// Sort arrays by angles
+		rays.sort();
+	}
+
+	// -----------------------
+	// Make drawing triangles 
+	int count = (rays.size() + 1) * 2;		// Number of vertexes 
+	niCount = rays.size() * 3;	// Number of indicies 
+
+	// delete current triagles
+	delete[] nlightArray;
+	nlightArray = NULL;
+	delete[] nindicies;
+	nindicies = NULL;
+
+	// Make vertex list 
+	nlightArray = new GLfloat[count];
+	nlightArray[0] = lightX;
+	nlightArray[1] = lightY;
+	int index = 2;
+	for (std::list<Seg2>::iterator it = rays.begin(); it != rays.end(); it++){
+		rayEnds.push_back(Point((*it).b.getX(), (*it).b.getY()));
+		nlightArray[index] = (*it).b.getX();
+		index++;
+		nlightArray[index] = (*it).b.getY();
+		index++;
+	}
+
+	// Make index list 
+	nindicies = new GLshort[niCount];
+	int i2 = 1;
+	for (int i = 0; i < niCount; i+=3){
+		if (i == 0){
+			nindicies[i] = 0;
+			nindicies[i+1] = 1;
+			nindicies[i+2] = rays.size();
+		}
+		else {
+			nindicies[i] = 0;
+			nindicies[i+1] = i2+1;
+			nindicies[i+2] = i2;
+			i2++;
+		}
+	}
+	
 
 	valid = true;
 }

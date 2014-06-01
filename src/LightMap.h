@@ -22,8 +22,10 @@ class LightMap
 	int rayCount;
 
 	// Lists
+	std::list<Point*> points;
 	std::list<Seg> segs;
 	std::list<Seg2> rays;
+	std::list<Point> rayEnds;
 
 	// Drawing properties 
 	int iCount;
@@ -65,11 +67,20 @@ public:
 	// Draw map state
 	void drawMap(GLHandler* mgl);
 
+	// Draw debug
+	void drawDebug(GLHandler* mgl, UIAtlas* mUI);
+
 	// Add segs
 	void addSeg(Seg seg);
 
 	// Remove seg from map
 	void removeSeg(Seg seg);
+
+	// Add points
+	void addPoint(Point* p);
+
+	// Remove point from map
+	void removePoint(Point* p);
 
 	// Clear map
 	void clear();
@@ -81,5 +92,8 @@ private:
 
 	// Create new map 
 	void makeMap();
+
+	// Create new map wtih method 2
+	void makeMap2();
 };
 
