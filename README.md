@@ -1,6 +1,29 @@
 DG 2D Ray Tracing
 ==============
 
+This is a small program that does 2D ray tracing with 2D boxes.  
+
+How to use
+--------
+All the controls are on the left side, and this is what they do from top to bottom.  
+  
+Move (Button): Click this button, then click and drag a box to move it around  
+Set Light (Button): Click this button, then click anywhere on screen to set the light location  
+Add (Button): Click this button then click and drag then release to create a box on screen  
+Remove (Button): Click this button, then click a box to remove it  
+Show Light (Checkbox): Check to toggle light  
+Light Size (Value Slider): Slide to change size of light circle  
+Darkness (Value Slider): Slide to change opacity of darkness  
+Ray Count (Value Slider): Slide to change the number of rays used during method 1 raytracing  
+Use Method 1 (Checkbox): Check to switch to method 1 raytracing   
+Use Method 2 (Checkbox): Check to switch to method 2 raytracing   
+  
+**Light Method 1**  
+Method 1 is slower than method 2, but produces a more accurate light circle.  
+  
+**Light Method 2**  
+Method 2 is faster than method 1, but the light circle is not a smooth curve. 
+  
 Building / Running
 --------
 
