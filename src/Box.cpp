@@ -3,6 +3,7 @@
 // Make a new box with default properties
 Box::Box(){
 	locX = locY = width = height = 0.0f;
+	centerX = centerY = 0.0f;
 	color[0] = color[1] = color[2] = color[3] = 1.0f;
 	fixCorners();
 }
@@ -12,6 +13,8 @@ Box::Box(float x, float y, float w, float h){
 	locY = y;
 	width = w;
 	height = h;
+	centerX = x + (width * .5f);
+	centerY = y + (height * .5f);
 	color[0] = color[1] = color[2] = color[3] = 1.0f;
 	fixCorners();
 }
@@ -64,6 +67,8 @@ void Box::setColor(float r, float g, float b, float a){
 	color[2] = b;
 	color[3] = a;
 }
+float Box::getCenterX(){return centerX;}
+float Box::getCenterY(){return centerY;}
 
 // Get boxs top left corner
 Point* Box::getCornerTopLeft(){return &tlC;}
@@ -91,7 +96,13 @@ bool Box::contains(float x, float y){
 // Fix corner locations 
 void Box::fixCorners(){
 	tlC.setLocation(locX,locY);
+	tlC.box = this;
 	trC.setLocation(locX + width, locY);
+	trC.box = this;
 	blC.setLocation(locX, locY + height);
+	blC.box = this;
 	brC.setLocation(locX + width, locY + height);
+	brC.box = this;
+	centerX = locX + (width * .5f);
+	centerY = locY + (height * .5f);
 }

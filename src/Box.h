@@ -8,6 +8,7 @@ class Box
 {
 	// Location and size
 	float locX,locY,width,height;
+	float centerX, centerY;
 	// Corners 
 	Point tlC,trC,blC,brC;
 	// Box color
@@ -42,6 +43,8 @@ public:
 	float getHeight();
 	// Set box color
 	void setColor(float r, float g, float b, float a);
+	float getCenterX();
+	float getCenterY();
 
 	// Get boxs top left corner
 	Point* getCornerTopLeft();

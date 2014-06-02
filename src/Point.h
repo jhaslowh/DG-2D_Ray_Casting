@@ -7,6 +7,8 @@ class Point
 	float mY;
 
 public:
+	void* box;
+
 	Point();
 	Point(float x, float y);
 	~Point();

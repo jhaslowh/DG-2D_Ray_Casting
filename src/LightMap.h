@@ -12,6 +12,7 @@
 
 #define PI_2 6.283185f
 #define PI 3.1415926f
+#define SECOND_ANGLE_DIFF .01f
 
 class LightMap
 {

@@ -337,16 +337,46 @@ void LightMap::makeMap2(){
 		for (std::list<Point*>::iterator it = points.begin(); it != points.end(); it++){
 			// Get angle of ray 
 			angle = atan2((*it)->getY() - lightY, (*it)->getX() - lightX);
-
 			// Make ray 
 			seg.a.setLocation(lightX, lightY);
 			seg.b.setLocation(
 				lightX + (cos(angle) * lightRaySize),
 				lightY + (sin(angle) * lightRaySize));
+			// Check if point is closer. If it is then set it as the
+			// endpoint of the segment instead of light ray current end. 
+			if (dist(lightX, lightY, (*it)->getX(), (*it)->getY()) < 
+				dist(lightX, lightY, seg.b.getX(), seg.b.getY()))
+				seg.b.setLocation((*it)->getX(), (*it)->getY());
+			// Set angle for segment 
 			seg.angle = angle;
-
 			// Add ray to list 
 			rays.push_back(seg);
+
+			// Add second line
+			// - Adding the second line fixes errors with the corners not appearing correctly 
+			// - and also fixes a flickering issue. 
+			if ((*it)->box != NULL){
+				// Get box of ray 
+				angle = atan2(
+					((Box*)((*it)->box))->getCenterY() - lightY, 
+					((Box*)((*it)->box))->getCenterX() - lightX);
+
+				// Get angular direction (-1 | 1) 
+				float direc = seg.angle - angle;
+				direc /= abs(direc);
+
+				// Make second ray
+				// Get angle of ray
+				angle = seg.angle + (SECOND_ANGLE_DIFF * direc);
+				// Make ray
+				seg.a.setLocation(lightX, lightY);
+				seg.b.setLocation(
+					lightX + (cos(angle) * lightRaySize),
+					lightY + (sin(angle) * lightRaySize));
+				seg.angle = angle;
+				// Add ray to list 
+				rays.push_back(seg);
+			}
 		}
 	
 		// -----------------------
