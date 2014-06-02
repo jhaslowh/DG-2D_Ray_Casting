@@ -9,6 +9,7 @@ class UICheckbox : public UITransitionObject
 	// Location settings 
 	float text_x, text_y;
 	bool checked, hovered;
+	bool checkChanged;
 	bool down;
 	std::string label;
 	
@@ -35,5 +36,8 @@ public:
 
 	// Check if the button was clicked 
 	bool Checked();
+
+	// Check if check status changed
+	bool CheckChanged();
 };
 

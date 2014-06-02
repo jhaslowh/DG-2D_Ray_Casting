@@ -40,6 +40,9 @@ class LightMap
 	// Set to true to clear drawing values 
 	bool clearDrawb;
 
+	// Bool for which method to use 
+	bool useMethod1;
+
 public:
 	BoxHandler* bHand;
 
@@ -58,6 +61,9 @@ public:
 	void setRayCount(int count);
 	// Get the ray count
 	int getRayCount();
+
+	// Set which method to use
+	void setMethod1(bool value);
 
 	// Invalidate map
 	void invalidate();

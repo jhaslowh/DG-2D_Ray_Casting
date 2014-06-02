@@ -47,6 +47,7 @@ class LightScreen : public UIScreen
 	BoxHandler* bHand;
 	LightMap lMap;
 	float lightDarkness;
+	Rec method1Box, method2Box;
 
 	// state variables 
 	Box* moveBox;		// Box being moved 
@@ -64,10 +65,12 @@ class LightScreen : public UIScreen
 	UICheckbox* cbShowLight;
 	UILabel* lLightSize;
 	UIValueSlider* vsLightSize;
-	UILabel* lRayCount;
-	UIValueSlider* vsRayCount;
 	UILabel* lDarkness;
 	UIValueSlider* vsDarkness;
+	UICheckbox* cbMethod1;
+	UILabel* lRayCount;
+	UIValueSlider* vsRayCount;
+	UICheckbox* cbMethod2;
 
 	// Corners
 	Point tlC, trC, blC, brC;

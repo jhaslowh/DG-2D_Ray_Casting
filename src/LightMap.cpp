@@ -8,6 +8,7 @@ LightMap::LightMap()
 	valid = false;
 	clearDrawb = false;
 	rayCount = 180;
+	useMethod1 = true;
 
 	// Drawing properties 
 	lightArray = NULL;
@@ -57,6 +58,9 @@ void LightMap::setRayCount(int count){
 // Get the ray count
 int LightMap::getRayCount(){return rayCount;}
 
+// Set which method to use
+void LightMap::setMethod1(bool value){useMethod1 = value;}
+
 // Invalidate map
 void LightMap::invalidate(){
 	valid = false;
@@ -65,7 +69,10 @@ void LightMap::invalidate(){
 // Update map state
 void LightMap::update(float deltaTime){
 	if (!valid){
-		makeMap2();
+		if (useMethod1)
+			makeMap();
+		else
+			makeMap2();
 	}
 }
 

@@ -41,6 +41,8 @@ LightScreen::LightScreen() : UIScreen()
 	vsRayCount = NULL;
 	lDarkness = NULL;
 	vsDarkness = NULL;
+	cbMethod1 = NULL;
+	cbMethod2 = NULL;
 }
 
 LightScreen::~LightScreen()
@@ -77,7 +79,10 @@ LightScreen::~LightScreen()
 	lDarkness = NULL;
 	delete vsDarkness;
 	vsDarkness = NULL;
-
+	delete cbMethod1;
+	cbMethod1 = NULL;
+	delete cbMethod2;
+	cbMethod2 = NULL;
 }
 	
 // Initialize screen
@@ -91,7 +96,7 @@ void LightScreen::init(float screen_width, float screen_height){
 	lTitle = new UILabel(getStateString());
 	lTitle->setLocation(menuWidth + 10.0f, 10.0f);
 	lTitle->setTextSize(25.0f);
-	lTitle->setColor(.5f,.5f,.5f,1.0f);
+	lTitle->setColor(.058f,.828f,.941f,1.0f);
 	lTitle->setupHide(HT_VERTICAL,lTitle->getY()-40.0f,.2f,true);
 	lTitle->setHidden();
 	// Create screen show button 
@@ -140,22 +145,9 @@ void LightScreen::init(float screen_width, float screen_height){
 	vsLightSize->setMaxValue(2000.0f);
 	vsLightSize->setValue(500.0f);
 	vsLightSize->setupHide(HT_HOROZONTAL, vsLightSize->getX() - 150.0f, .2f, true);
-	// Create ray count label 
-	lRayCount = new UILabel(std::string("Ray Count: 180"));
-	lRayCount->setLocation(vsLightSize->getX() + 4.0f, vsLightSize->getY() + 30.0f);
-	lRayCount->setTextSize(16.0f);
-	lRayCount->setColor(.8f,.8f,.8f,1.0f);
-	lRayCount->setupHide(HT_HOROZONTAL,lRayCount->getX()-150.0f,.2f,true);
-	// Create ray count value slider 
-	vsRayCount = new UIValueSlider();
-	vsRayCount->setLocation(lRayCount->getX() - 4.0f, lRayCount->getY() + 20.0f);
-	vsRayCount->setMinValue(5.0f);
-	vsRayCount->setMaxValue(300.0f);
-	vsRayCount->setValue(180.0f);
-	vsRayCount->setupHide(HT_HOROZONTAL, vsRayCount->getX() - 150.0f, .2f, true);
 	// Create darkness label 
 	lDarkness = new UILabel(std::string("Darkness"));
-	lDarkness->setLocation(vsRayCount->getX() + 4.0f, vsRayCount->getY() + 30.0f);
+	lDarkness->setLocation(vsLightSize->getX() + 4.0f, vsLightSize->getY() + 30.0f);
 	lDarkness->setTextSize(16.0f);
 	lDarkness->setColor(.8f,.8f,.8f,1.0f);
 	lDarkness->setupHide(HT_HOROZONTAL,lDarkness->getX()-150.0f,.2f,true);
@@ -167,12 +159,46 @@ void LightScreen::init(float screen_width, float screen_height){
 	vsDarkness->setValue(180.0f);
 	vsDarkness->setupHide(HT_HOROZONTAL, vsDarkness->getX() - 150.0f, .2f, true);
 	
+	// Make method boxes 
+	method1Box.reset(1.0f, vsDarkness->getY() + 30.0f, menuWidth-2.0f, 77.0f);
+	method2Box.reset(1.0f, method1Box.getY() + method1Box.getHeight() + 10.0f, menuWidth-2.0f, 35.0f);
+
+	// Method 1 Checkbox 
+	cbMethod1 = new UICheckbox(method1Box.getX(), method1Box.getY() + 5.0f,
+		24.0f,24.0f,std::string("Use Method 1"));
+	cbMethod1->setupHide(HT_HOROZONTAL,cbMethod1->getX()-150.0f,.2f,true);
+	cbMethod1->setTextColor(.8f,.8f,.8f);
+	cbMethod1->setChecked(true);
+
+	// Create ray count label 
+	lRayCount = new UILabel(std::string("Ray Count: 180"));
+	lRayCount->setLocation(cbMethod1->getX() + 12.0f, cbMethod1->getY() + 30.0f);
+	lRayCount->setTextSize(16.0f);
+	lRayCount->setColor(.8f,.8f,.8f,1.0f);
+	lRayCount->setupHide(HT_HOROZONTAL,lRayCount->getX()-150.0f,.2f,true);
+	// Create ray count value slider 
+	vsRayCount = new UIValueSlider();
+	vsRayCount->setLocation(lRayCount->getX() - 4.0f, lRayCount->getY() + 20.0f);
+	vsRayCount->setMinValue(5.0f);
+	vsRayCount->setMaxValue(300.0f);
+	vsRayCount->setValue(180.0f);
+	vsRayCount->setupHide(HT_HOROZONTAL, vsRayCount->getX() - 150.0f, .2f, true);
+	
+	// Method 2 Checkbox 
+	cbMethod2 = new UICheckbox(method2Box.getX(), method2Box.getY() + 5.0f,
+		24.0f,24.0f,std::string("Use Method 2"));
+	cbMethod2->setupHide(HT_HOROZONTAL,cbMethod2->getX()-150.0f,.2f,true);
+	cbMethod2->setTextColor(.8f,.8f,.8f);
+	cbMethod2->setChecked(false);
+	
 	lLightSize->setHidden();
 	vsLightSize->setHidden();
 	lRayCount->setHidden();
 	vsRayCount->setHidden();
 	lDarkness->setHidden();
 	vsDarkness->setHidden();
+	cbMethod1->setHidden();
+	cbMethod2->setHidden();
 
 	// Add corners
 	tlC.setLocation(0.0f,0.0f);
@@ -230,6 +256,8 @@ void LightScreen::update(float deltaTime){
 	vsRayCount->update(deltaTime);
 	lDarkness->update(deltaTime);
 	vsDarkness->update(deltaTime);
+	cbMethod1->update(deltaTime);
+	cbMethod2->update(deltaTime);
 
 	lMap.update(deltaTime);
 }
@@ -407,6 +435,20 @@ void LightScreen::updateInput(KeyHandler* mKeyH, MouseHandler* mMouseH){
 			}
 		}
 
+		// Update checkboxes
+		cbMethod1->updateInput(mKeyH, mMouseH);
+		if (cbMethod1->CheckChanged()){
+			cbMethod2->setChecked(!cbMethod1->Checked());
+			lMap.setMethod1(cbMethod1->Checked());
+			lMap.invalidate();
+		}
+		cbMethod2->updateInput(mKeyH, mMouseH);
+		if (cbMethod2->CheckChanged()){
+			cbMethod1->setChecked(!cbMethod2->Checked());
+			lMap.setMethod1(!cbMethod2->Checked());
+			lMap.invalidate();
+		}
+
 		// Check for hide screen
 		bHide->updateInput(mKeyH, mMouseH);
 		if (bHide->wasClicked()) hide();
@@ -450,12 +492,23 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	// State specific things 
 	drawState(mgl, (UIAtlas*)mAtlas);
 
+	//---------------------
 	// Draw UI 
+	
+	// Map debug  
+	lMap.drawDebug(mgl, (UIAtlas*)mAtlas);
+	// Menu line 
 	mgl->setFlatColor(.0f,.0f,.0f,bMove->getOpacity());
 	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, 0.0f,0.0f,menuWidth+1.0f, screen_height);
+	// Menu Background
 	mgl->setFlatColor(.19f,.2f,.2f,bMove->getOpacity());
 	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, 0.0f,0.0f,menuWidth, screen_height);
-	lMap.drawDebug(mgl, (UIAtlas*)mAtlas);
+	// Draw method boxes 
+	mgl->setFlatColor(.25f,.25f,.25f,bMove->getOpacity());
+	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, method1Box.getX(), method1Box.getY(),
+		method1Box.getWidth(), method1Box.getHeight());
+	((UIAtlas*)mAtlas)->drawScale2(mgl, UII_REC, method2Box.getX(), method2Box.getY(),
+		method2Box.getWidth(), method2Box.getHeight());
 
 	// Draw buttons
 	lTitle->draw(mgl, (UIAtlas*)mAtlas);
@@ -473,6 +526,8 @@ void LightScreen::draw(GLHandler* mgl, TextureAtlas* mAtlas){
 	vsRayCount->draw(mgl, (UIAtlas*)mAtlas);
 	lDarkness->draw(mgl, (UIAtlas*)mAtlas);
 	vsDarkness->draw(mgl, (UIAtlas*)mAtlas);
+	cbMethod1->draw(mgl, (UIAtlas*)mAtlas);
+	cbMethod2->draw(mgl, (UIAtlas*)mAtlas);
 }
 
 // Draw state 
@@ -504,6 +559,8 @@ void LightScreen::hide(){
 	vsRayCount->hide();
 	lDarkness->hide();
 	vsDarkness->hide();
+	cbMethod1->hide();
+	cbMethod2->hide();
 	screenShown = false;
 }
 
@@ -528,6 +585,8 @@ void LightScreen::show(){
 	vsRayCount->show();
 	lDarkness->show();
 	vsDarkness->show();
+	cbMethod1->show();
+	cbMethod2->show();
 	screenShown = true;
 }
 
