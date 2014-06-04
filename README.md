@@ -1,7 +1,7 @@
-DG 2D Ray Tracing
+DG 2D Ray Casting
 ==============
 
-This is a small program that does 2D ray tracing with 2D boxes.  
+This is a small program that does 2D ray casting with 2D boxes.  
 
 How to use
 --------
