@@ -90,7 +90,7 @@ Then run the following command
 
     sudo /sbin/ldconfig
 
-Installing Libraries 
+Installing Libraries on Linux
 -----------------
 
 SDL2, GLEW, and SOIL are required to compile. If you do not have any of these libraries, follow the instructions below to install them.  
