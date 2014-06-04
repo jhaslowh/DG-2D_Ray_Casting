@@ -185,7 +185,7 @@ void LightMap::makeMap(){
 		Seg2 seg;		// Segment for use during algorithm
 		Point inter;	// Intersection point 
 		float current = -PI;	// Current angle for ray to add
-		float angle = 0.0f;		// Angle used during wall segment ray adds 
+		float angle = 0.0f;		// Angle used when adding rays for wall segments 
 		float spacing = PI_2 / (float)rayCount; // Angular spacing between rays 
 		std::list<Seg> walls;
 		Seg* wall = NULL;
@@ -206,11 +206,12 @@ void LightMap::makeMap(){
 					// Shrink Ray 
 					seg.b.setLocation(inter.getX(), inter.getY());
 
+					// Set current wall as closest wall
 					wall = &(*it2);
 				}
 			}
 
-			// Add wall to list 
+			// Add closest wall to wall list 
 			if (wall != NULL){
 				bool wallfound = false;
 				for (std::list<Seg>::iterator it = walls.begin(); it != walls.end(); it++){
@@ -230,7 +231,7 @@ void LightMap::makeMap(){
 			current += spacing;
 		}
 
-		// Add wall segs
+		// For each wall connected to light source, add ray for end points. 
 		for (std::list<Seg>::iterator it = walls.begin(); it != walls.end(); it++){
 			// Check distance 
 			if (dist(lightX, lightY, (*it).a->getX(), (*it).a->getY()) < lightRaySize){

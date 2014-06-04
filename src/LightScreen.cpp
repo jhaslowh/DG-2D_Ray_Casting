@@ -17,7 +17,7 @@ LightScreen::LightScreen() : UIScreen()
 
 	// Create box handler
 	bHand = new BoxHandler(100);
-	lightDarkness = 1.0f;
+	lightDarkness = .8f;
 
 	// Move state variables 
 	moveBox = NULL;
@@ -156,7 +156,7 @@ void LightScreen::init(float screen_width, float screen_height){
 	vsDarkness->setLocation(lDarkness->getX() - 4.0f, lDarkness->getY() + 20.0f);
 	vsDarkness->setMinValue(0.0f);
 	vsDarkness->setMaxValue(1.0f);
-	vsDarkness->setValue(180.0f);
+	vsDarkness->setValue(lightDarkness);
 	vsDarkness->setupHide(HT_HOROZONTAL, vsDarkness->getX() - 150.0f, .2f, true);
 	
 	// Make method boxes 
