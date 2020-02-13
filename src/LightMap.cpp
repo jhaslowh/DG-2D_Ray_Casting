@@ -112,11 +112,11 @@ void LightMap::drawMap(GLHandler* mgl){
 
 // Draw debug
 void LightMap::drawDebug(GLHandler* mgl, UIAtlas* mUI){
-	/*mgl->setFlatColor(1.0f, 0.0f, 0.0f, 1.0f);
+	mgl->setFlatColor(1.0f, 0.0f, 0.0f, 1.0f);
 
 	for (std::list<Point>::iterator it = rayEnds.begin(); it != rayEnds.end(); it++){
 		mUI->drawScale2(mgl, UII_REC, (*it).getX() - 1.0f, (*it).getY(), 2.0f, 2.0f);
-	}*/
+	}
 }
 
 // Add segs
@@ -285,8 +285,8 @@ void LightMap::makeMap(){
 	
 	// -----------------------
 	// Make drawing triangles 
-	int count = (rays.size() + 1) * 2;		// Number of vertexes 
-	niCount = rays.size() * 3;	// Number of indicies 
+	int count = (rays.size() + 1) * 2;      // Number of vertexes 
+	niCount = rays.size() * 3;	            // Number of indicies 
 
 	// delete current triagles
 	delete[] nlightArray;
@@ -342,15 +342,16 @@ void LightMap::makeMap2(){
 		// Create Rays 
 		float angle;
 		Seg2 seg;
+		// points here are the corners of the drawn boxes and the corners of the screen. 
 		for (std::list<Point*>::iterator it = points.begin(); it != points.end(); it++){
-			// Get angle of ray 
+			// Get angle of ray. From light source to the point.  
 			angle = atan2((*it)->getY() - lightY, (*it)->getX() - lightX);
-			// Make ray 
+			// Make ray. From the light source to the point end. Length is given light size. 
 			seg.a.setLocation(lightX, lightY);
 			seg.b.setLocation(
 				lightX + (cos(angle) * lightRaySize),
 				lightY + (sin(angle) * lightRaySize));
-			// Check if point is closer. If it is then set it as the
+			// Check if point is closer than ray end. If it is then set it as the
 			// endpoint of the segment instead of light ray current end. 
 			if (dist(lightX, lightY, (*it)->getX(), (*it)->getY()) < 
 				dist(lightX, lightY, seg.b.getX(), seg.b.getY()))
@@ -360,9 +361,11 @@ void LightMap::makeMap2(){
 			// Add ray to list 
 			rays.push_back(seg);
 
-			// Add second line
-			// - Adding the second line fixes errors with the corners not appearing correctly 
-			// - and also fixes a flickering issue. 
+			// Add second line that is a slight offset from the original ray based on the
+			// center location of the box the ray was build from. This can be observed when 
+			// watching the rays interact with corners. 
+			// - Adding the second line fixes errors with the corners not appearing correctly. 
+			// - And also fixes a flickering issue. 
 			if ((*it)->box != NULL){
 				// Get box of ray 
 				angle = atan2(
@@ -388,7 +391,8 @@ void LightMap::makeMap2(){
 		}
 	
 		// -----------------------
-		// Clip Rays 
+		// Clip Rays. This checks if any rays intercept the walls and then 
+		// clips them by the intersection point. 
 		Point inter;
 		for (std::list<Seg2>::iterator it = rays.begin(); it != rays.end(); it++){
 			for (std::list<Seg>::iterator it2 = segs.begin(); it2 != segs.end(); it2++){
@@ -401,17 +405,17 @@ void LightMap::makeMap2(){
 		}
 
 		// -----------------------
-		// Sort arrays by angles
+		// Sort arrays by angles.
 		rays.sort();
 	}
 
 	// -----------------------
 	// Make drawing triangles 
-	int count = (rays.size() + 1) * 2;		// Number of vertexes 
-	niCount = rays.size() * 3;	// Number of indicies 
+	int count = (rays.size() + 1) * 2;     // Number of vertexes 
+	niCount = rays.size() * 3;	           // Number of indicies 
 
 	// delete current triagles
-	delete[] nlightArray;
+	delete[] nlightArray;	
 	nlightArray = NULL;
 	delete[] nindicies;
 	nindicies = NULL;
