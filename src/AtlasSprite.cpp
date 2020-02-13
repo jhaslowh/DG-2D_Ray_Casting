@@ -3,13 +3,13 @@
 
 AtlasSprite::AtlasSprite()
 {
-	id = 0;
-	locX = 0.0f;
-	locY = 0.0f;
-	rotation = 0.0f;
-	scale = 1.0f;
-	originX = 0.0f;
-	originY = 0.0f;
+    id = 0;
+    locX = 0.0f;
+    locY = 0.0f;
+    rotation = 0.0f;
+    scale = 1.0f;
+    originX = 0.0f;
+    originY = 0.0f;
 }
 
 AtlasSprite::~AtlasSprite(){}
@@ -34,9 +34,9 @@ int AtlasSprite::getID(){return id;}
 
 // Draw the sprite 
 void AtlasSprite::draw(GLHandler* mgl, TextureAtlas* mAtlas){
-	mAtlas->draw(mgl,id, locX,locY,scale,rotation,originX,originY);
+    mAtlas->draw(mgl,id, locX,locY,scale,rotation,originX,originY);
 }
 // Draw the sprite at offset 
 void AtlasSprite::draw(GLHandler* mgl, TextureAtlas* mAtlas, float offx, float offy){
-	mAtlas->draw(mgl,id, offx+locX,offy+locY,scale,rotation,originX,originY);
+    mAtlas->draw(mgl,id, offx+locX,offy+locY,scale,rotation,originX,originY);
 }

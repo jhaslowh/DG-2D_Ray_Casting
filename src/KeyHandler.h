@@ -59,52 +59,52 @@
 
 class KeyHandler
 {
-	// List of keys 
-	bool keys[KEY_COUNT];
-	bool keysNext[KEY_COUNT];
-	bool keysOld[KEY_COUNT];
-	float keyDownTime[KEY_COUNT];
-	// Time to wait till key is repeated.
-	float timeForRepeat;		
-	// Time to start multiply repeats at 
-	float timeForMultiRepeat;   
+    // List of keys 
+    bool keys[KEY_COUNT];
+    bool keysNext[KEY_COUNT];
+    bool keysOld[KEY_COUNT];
+    float keyDownTime[KEY_COUNT];
+    // Time to wait till key is repeated.
+    float timeForRepeat;        
+    // Time to start multiply repeats at 
+    float timeForMultiRepeat;   
 
 public:
-	KeyHandler();
-	~KeyHandler();
+    KeyHandler();
+    ~KeyHandler();
 
-	// Update keys 
-	void update(float deltaTime);
+    // Update keys 
+    void update(float deltaTime);
 
-	// Update the keystates 
-	void updateState(SDL_Event windowEvent);
+    // Update the keystates 
+    void updateState(SDL_Event windowEvent);
 
-	// Check to see if a key is down
-	bool keyDown(int key);
+    // Check to see if a key is down
+    bool keyDown(int key);
 
-	// Check to see if a key is up
-	bool keyUp(int key);
+    // Check to see if a key is up
+    bool keyUp(int key);
 
-	// Check to see if a key was released
-	// (was down and just released)
-	bool keyReleased(int key);
+    // Check to see if a key was released
+    // (was down and just released)
+    bool keyReleased(int key);
 
-	// Check to see if a key was pressed
-	// (was up and just pressed)
-	bool keyPressed(int key);
+    // Check to see if a key was pressed
+    // (was up and just pressed)
+    bool keyPressed(int key);
 
-	// Check to see if a key was pressed
-	// (was up and just pressed) or has been 
-	// held for a set amout of time 
-	bool keyPressedHold(int key);
+    // Check to see if a key was pressed
+    // (was up and just pressed) or has been 
+    // held for a set amout of time 
+    bool keyPressedHold(int key);
 
-	// Get the string of the pressed key
-	std::string getPressedKey();
+    // Get the string of the pressed key
+    std::string getPressedKey();
 
 private:
-	// Get the key index from sent scancode 
+    // Get the key index from sent scancode 
 // For list of scancodes's, please see 
 // http://wiki.libsdl.org/SDL_Scancode
-	int keyIndex(int scancode);
+    int keyIndex(int scancode);
 };
 

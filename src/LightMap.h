@@ -16,91 +16,91 @@
 
 class LightMap
 {
-	// Light properties 
-	float lightX, lightY;
-	float lightRaySize;
-	bool valid;
-	int rayCount;
+    // Light properties 
+    float lightX, lightY;
+    float lightRaySize;
+    bool valid;
+    int rayCount;
 
-	// Lists
-	std::list<Point*> points;
-	std::list<Seg> segs;
-	std::list<Seg2> rays;
-	std::list<Point> rayEnds;
+    // Lists
+    std::list<Point*> points;
+    std::list<Seg> segs;
+    std::list<Seg2> rays;
+    std::list<Point> rayEnds;
 
-	// Drawing properties 
-	int iCount;
-	GLfloat* lightArray;
-	GLshort* indicies;
-	// New arrays to be swapped 
-	int niCount;
-	GLfloat* nlightArray;
-	GLshort* nindicies;
+    // Drawing properties 
+    int iCount;
+    GLfloat* lightArray;
+    GLshort* indicies;
+    // New arrays to be swapped 
+    int niCount;
+    GLfloat* nlightArray;
+    GLshort* nindicies;
 
-	// Set to true to clear drawing values 
-	bool clearDrawb;
+    // Set to true to clear drawing values 
+    bool clearDrawb;
 
-	// Bool for which method to use 
-	bool useMethod1;
+    // Bool for which method to use 
+    bool useMethod1;
 
 public:
-	BoxHandler* bHand;
+    BoxHandler* bHand;
 
-	LightMap();
-	~LightMap();
+    LightMap();
+    ~LightMap();
 
-	// Set the location for the light 
-	void setLightLoc(float x, float y);
+    // Set the location for the light 
+    void setLightLoc(float x, float y);
 
-	// Set the size of the rays
-	void setLightSize(float value);
-	// Get the size of the rays
-	float getLightSize();
+    // Set the size of the rays
+    void setLightSize(float value);
+    // Get the size of the rays
+    float getLightSize();
 
-	// Set the ray count
-	void setRayCount(int count);
-	// Get the ray count
-	int getRayCount();
+    // Set the ray count
+    void setRayCount(int count);
+    // Get the ray count
+    int getRayCount();
 
-	// Set which method to use
-	void setMethod1(bool value);
+    // Set which method to use
+    void setMethod1(bool value);
 
-	// Invalidate map
-	void invalidate();
+    // Invalidate map
+    void invalidate();
 
-	// Update map state
-	void update(float deltaTime);
+    // Update map state
+    void update(float deltaTime);
 
-	// Draw map state
-	void drawMap(GLHandler* mgl);
+    // Draw map state
+    void drawMap(GLHandler* mgl);
 
-	// Draw debug
-	void drawDebug(GLHandler* mgl, UIAtlas* mUI);
+    // Draw debug
+    void drawDebug(GLHandler* mgl, UIAtlas* mUI);
 
-	// Add segs
-	void addSeg(Seg seg);
+    // Add segs
+    void addSeg(Seg seg);
 
-	// Remove seg from map
-	void removeSeg(Seg seg);
+    // Remove seg from map
+    void removeSeg(Seg seg);
 
-	// Add points
-	void addPoint(Point* p);
+    // Add points
+    void addPoint(Point* p);
 
-	// Remove point from map
-	void removePoint(Point* p);
+    // Remove point from map
+    void removePoint(Point* p);
 
-	// Clear map
-	void clear();
+    // Clear map
+    void clear();
 
 private: 
 
-	// Clear draw values 
-	void clearDraw();
+    // Clear draw values 
+    void clearDraw();
 
-	// Create new map 
-	void makeMap();
+    // Create new map 
+    void makeMap();
 
-	// Create new map wtih method 2
-	void makeMap2();
+    // Create new map wtih method 2
+    void makeMap2();
 };
 

@@ -23,16 +23,16 @@
 bool WINDOW_VISIBLE = false;
 
 /// Game loop and FPS timing 
-int FPS = 60;				// number of frames per second
-int MAX_FRAME_SKIPS = 12;	// maximum number of frames to be skipped
+int FPS = 60;                // number of frames per second
+int MAX_FRAME_SKIPS = 12;    // maximum number of frames to be skipped
 int FRAME_PERIOD = 1000/FPS;// the number of milliseconds per frame
-int lastTime = 0;			
-float deltaTime = 0;		// Used in game loop to tell how much time has passed
+int lastTime = 0;            
+float deltaTime = 0;        // Used in game loop to tell how much time has passed
 float SCREEN_WIDTH = 1280.0f;
 float SCREEN_HEIGHT = 720.0f;
 
 // States 
-bool running = true;		
+bool running = true;        
 bool render = false;        // Set to true each time game needs to be rendered 
 
 // Handlers
