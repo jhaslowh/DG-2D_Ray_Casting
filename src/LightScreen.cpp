@@ -1,5 +1,6 @@
 #include "LightScreen.h"
 
+#include <algorithm>
 
 LightScreen::LightScreen() : UIScreen()
 {

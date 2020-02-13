@@ -30,7 +30,7 @@ Building / Running
 OpenGL 3.0 or greater is required to run.   
 
 **Windows**  
-To compile on windows, run the project with Visual Studio 2010 or greater and build it.  
+To compile on windows, run the project with Visual Studio 2019 or greater and build it.  
 
 **Linux**  
 To compile (starting in the root project directory)  
@@ -65,6 +65,10 @@ Used for matrix math
 **SOIL**  
 [http://www.lonesock.net/soil.html](http://www.lonesock.net/soil.html)  
 Used to load texture files 
+
+#### Updating SDL
+
+Go to the link above. Go to downloads. Download the new development library. At the time of writing it is "SDL2-devel-2.0.10-VC.zip (Visual C++ 32/64-bit)". Replace the files under `src\include\SDL` and the lib files in `src\lib`. Use the x86 libs and not the 64 ones. 
 
 Linux Errors
 ------------------------
