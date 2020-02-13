@@ -115,7 +115,7 @@ void LightMap::drawDebug(GLHandler* mgl, UIAtlas* mUI){
     mgl->setFlatColor(1.0f, 0.0f, 0.0f, 1.0f);
 
     for (std::list<Point>::iterator it = rayEnds.begin(); it != rayEnds.end(); it++){
-        mUI->drawScale2(mgl, UII_REC, (*it).getX() - 1.0f, (*it).getY(), 2.0f, 2.0f);
+        mUI->drawScale2(mgl, UII_REC, (*it).getX() - 2.0f, (*it).getY() - 2.0f, 4.0f, 4.0f);
     }
 }
 
